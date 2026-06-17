@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { cn } from '@/lib/utils'
+import { EditableImage } from '@/components/admin/EditableImage'
 
 export function SectionHeading({
   eyebrow,
@@ -10,9 +11,9 @@ export function SectionHeading({
   className,
   light,
 }: {
-  eyebrow?: string
-  title: string
-  description?: string
+  eyebrow?: React.ReactNode
+  title: React.ReactNode
+  description?: React.ReactNode
   center?: boolean
   className?: string
   light?: boolean
@@ -66,23 +67,39 @@ export function PageHero({
   description,
   breadcrumb,
   backgroundImage,
+  section,
+  fieldKey,
 }: {
-  eyebrow?: string
-  title: string
-  description?: string
-  breadcrumb?: string
+  eyebrow?: React.ReactNode
+  title: React.ReactNode
+  description?: React.ReactNode
+  breadcrumb?: React.ReactNode
   backgroundImage?: string
+  section?: string
+  fieldKey?: string
 }) {
   return (
     <section className="relative overflow-hidden border-b border-border bg-secondary/40">
       {backgroundImage && (
-        <Image
-          src={backgroundImage}
-          alt="Background"
-          fill
-          className="pointer-events-none object-cover opacity-100"
-          priority
-        />
+        section && fieldKey ? (
+          <EditableImage
+            section={section}
+            fieldKey={fieldKey}
+            defaultSrc={backgroundImage}
+            alt="Background"
+            fill
+            className="pointer-events-none object-cover opacity-100"
+            priority
+          />
+        ) : (
+          <Image
+            src={backgroundImage}
+            alt="Background"
+            fill
+            className="pointer-events-none object-cover opacity-100"
+            priority
+          />
+        )
       )}
       <div
         className={cn(

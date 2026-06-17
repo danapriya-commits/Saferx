@@ -1,0 +1,226 @@
+{% extends "base.html" %}
+
+{% block title %}Visual Editor{% endblock %}
+
+{% block full_content %}
+<div class="flex flex-col h-screen overflow-hidden bg-gray-100">
+    <!-- Toolbar -->
+    <header class="bg-gray-900 text-white h-14 px-4 flex items-center justify-between shrink-0 shadow-md z-10 relative">
+        <div class="flex items-center gap-4">
+            <a href="/admin/dashboard" class="flex items-center gap-2 text-gray-300 hover:text-white transition-colors text-sm font-medium">
+                <i class="fas fa-arrow-left"></i> Dashboard
+            </a>
+            <div class="h-6 w-px bg-gray-700"></div>
+            <div class="flex items-center gap-2">
+                <span class="font-bold tracking-wide text-sm">SAFERX VISUAL EDITOR</span>
+                <span id="status-badge" class="ml-2 px-2 py-0.5 rounded text-xs font-semibold bg-gray-700 text-gray-300">Up to date</span>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <!-- Page Selector -->
+            <select id="page-selector" class="bg-gray-800 border border-gray-700 text-white text-sm rounded focus:ring-blue-500 focus:border-blue-500 block p-1.5 outline-none">
+                <option value="home">Home Page ( / )</option>
+                <option value="about">About ( /about )</option>
+                <option value="solutions">Solutions ( /solutions )</option>
+                <option value="projects">Projects ( /projects )</option>
+                <option value="equipment">Equipment ( /equipment )</option>
+                <option value="knowledge-centre">Knowledge ( /knowledge-centre )</option>
+                <option value="contact">Contact ( /contact )</option>
+            </select>
+
+            <button id="btn-save" class="opacity-50 cursor-not-allowed bg-gray-700 hover:bg-gray-600 text-white px-4 py-1.5 rounded text-sm font-medium transition-colors" disabled>
+                Save Draft
+            </button>
+            <button id="btn-publish" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded text-sm font-medium shadow transition-colors">
+                Publish Live
+            </button>
+        </div>
+    </header>
+
+    <!-- Visual Editor Iframe -->
+    <div class="flex-1 relative bg-white">
+        <!-- Loader -->
+        <div id="loader" class="absolute inset-0 flex items-center justify-center bg-gray-50 z-0">
+            <div class="flex flex-col items-center">
+                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mb-4"></div>
+                <p class="text-gray-500 text-sm">Loading Live Preview...</p>
+            </div>
+        </div>
+        
+        <!-- Frontend App -->
+        <iframe 
+            id="editor-frame" 
+            src="http://localhost:3000/?edit=true" 
+            class="w-full h-full border-none relative z-10"
+            title="SafeRx Visual Editor"
+        ></iframe>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const frame = document.getElementById('editor-frame');
+    const pageSelector = document.getElementById('page-selector');
+    const btnSave = document.getElementById('btn-save');
+    const btnPublish = document.getElementById('btn-publish');
+    const statusBadge = document.getElementById('status-badge');
+    const loader = document.getElementById('loader');
+
+    // Unsaved changes state
+    let unsavedChanges = {};
+    let hasUnsaved = false;
+
+    // Page navigation
+    pageSelector.addEventListener('change', (e) => {
+        const route = e.target.value === 'home' ? '/' : `/${e.target.value}`;
+        // Hide iframe temporarily and show loader
+        frame.style.opacity = '0';
+        loader.style.display = 'flex';
+        frame.src = `http://localhost:3000${route}?edit=true`;
+    });
+
+    frame.addEventListener('load', () => {
+        frame.style.opacity = '1';
+        loader.style.display = 'none';
+    });
+
+    // Listen for messages from frontend iframe
+    window.addEventListener('message', (event) => {
+        // In production, verify origin
+        if (event.data && event.data.type === 'CONTENT_UPDATED') {
+            const { page, section, fieldKey, value, contentType } = event.data.payload;
+            
+            // Note: If frontend doesn't send 'page', we default to 'home' or current selected
+            const currentPage = page || (pageSelector.value === 'home' ? 'home' : pageSelector.value);
+
+            if (!unsavedChanges[currentPage]) {
+                unsavedChanges[currentPage] = {};
+            }
+            if (!unsavedChanges[currentPage][section]) {
+                unsavedChanges[currentPage][section] = {};
+            }
+            
+            unsavedChanges[currentPage][section][fieldKey] = {
+                value: value,
+                type: contentType || 'text'
+            };
+
+            hasUnsaved = true;
+            updateUIState();
+        }
+    });
+
+    function updateUIState() {
+        if (hasUnsaved) {
+            btnSave.classList.remove('opacity-50', 'cursor-not-allowed');
+            btnSave.disabled = false;
+            btnSave.classList.add('bg-gray-600');
+            statusBadge.textContent = 'Unsaved Changes';
+            statusBadge.className = 'ml-2 px-2 py-0.5 rounded text-xs font-semibold bg-yellow-500/20 text-yellow-500';
+        } else {
+            btnSave.classList.add('opacity-50', 'cursor-not-allowed');
+            btnSave.disabled = true;
+            btnSave.classList.remove('bg-gray-600');
+            statusBadge.textContent = 'Up to date';
+            statusBadge.className = 'ml-2 px-2 py-0.5 rounded text-xs font-semibold bg-gray-700 text-gray-300';
+        }
+    }
+
+    // Save Drafts
+    btnSave.addEventListener('click', async () => {
+        if (!hasUnsaved) return;
+        
+        btnSave.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Saving...';
+        btnSave.disabled = true;
+
+        const itemsToSave = [];
+        for (const [page, sections] of Object.entries(unsavedChanges)) {
+            for (const [section, fields] of Object.entries(sections)) {
+                for (const [fieldKey, data] of Object.entries(fields)) {
+                    itemsToSave.push({
+                        page: page,
+                        section: section,
+                        field_key: fieldKey,
+                        content_type: data.type,
+                        content_value: data.value
+                    });
+                }
+            }
+        }
+
+        try {
+            const res = await fetch('/api/editor/save', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ items: itemsToSave })
+            });
+
+            if (res.ok) {
+                unsavedChanges = {};
+                hasUnsaved = false;
+                updateUIState();
+                
+                // Show temporary success state
+                const originalText = statusBadge.textContent;
+                const originalClass = statusBadge.className;
+                statusBadge.textContent = 'Draft Saved';
+                statusBadge.className = 'ml-2 px-2 py-0.5 rounded text-xs font-semibold bg-green-500/20 text-green-500';
+                setTimeout(() => {
+                    if (!hasUnsaved) {
+                        statusBadge.textContent = 'Up to date';
+                        statusBadge.className = 'ml-2 px-2 py-0.5 rounded text-xs font-semibold bg-gray-700 text-gray-300';
+                    }
+                }, 3000);
+            } else {
+                alert('Failed to save changes.');
+            }
+        } catch (e) {
+            console.error(e);
+            alert('Error saving changes.');
+        } finally {
+            btnSave.innerHTML = 'Save Draft';
+            updateUIState();
+        }
+    });
+
+    // Publish Live
+    btnPublish.addEventListener('click', async () => {
+        // If there are unsaved changes, save them first
+        if (hasUnsaved) {
+            await btnSave.click();
+        }
+
+        btnPublish.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Publishing...';
+        btnPublish.disabled = true;
+
+        try {
+            // Publish the current page
+            const currentPage = pageSelector.value === 'home' ? 'home' : pageSelector.value;
+            const res = await fetch(`/api/editor/publish?page=${currentPage}`, {
+                method: 'POST'
+            });
+
+            if (res.ok) {
+                statusBadge.textContent = 'Live on Site!';
+                statusBadge.className = 'ml-2 px-2 py-0.5 rounded text-xs font-semibold bg-blue-500/20 text-blue-400';
+                setTimeout(() => {
+                    if (!hasUnsaved) {
+                        statusBadge.textContent = 'Up to date';
+                        statusBadge.className = 'ml-2 px-2 py-0.5 rounded text-xs font-semibold bg-gray-700 text-gray-300';
+                    }
+                }, 3000);
+            } else {
+                alert('Failed to publish changes.');
+            }
+        } catch (e) {
+            console.error(e);
+            alert('Error publishing changes.');
+        } finally {
+            btnPublish.innerHTML = 'Publish Live';
+            btnPublish.disabled = false;
+        }
+    });
+</script>
+{% endblock %}

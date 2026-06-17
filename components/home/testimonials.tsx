@@ -7,7 +7,7 @@ import { TESTIMONIALS } from '@/lib/site-data'
 
 export function Testimonials() {
   return (
-    <section className="bg-secondary py-20 lg:py-28">
+    <section className="bg-secondary py-14 lg:py-20">
       <div className="container-px mx-auto max-w-[1536px]">
         <SectionHeading
           eyebrow="Testimonials"

@@ -23,9 +23,16 @@ const QUICK_REPLIES = [
 
 type Step = 'intro' | 'details' | 'done'
 
+import { usePathname } from 'next/navigation'
+
 export function WhatsAppWidget() {
   const [open, setOpen] = useState(false)
   const [step, setStep] = useState<Step>('intro')
+  const pathname = usePathname()
+
+  if (pathname?.startsWith('/admin')) {
+    return null
+  }
   const [topic, setTopic] = useState<string>('')
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')

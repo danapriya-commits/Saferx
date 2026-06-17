@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { motion, useInView } from 'motion/react'
+import { EditableText } from '@/components/admin/EditableText'
 
 const STATS = [
   { value: 500, suffix: '+', label: 'Installations' },
@@ -56,7 +57,9 @@ export function Stats() {
                 <Counter to={s.value} suffix={s.suffix} />
               </p>
               <p className="mt-2 text-sm font-medium text-muted-foreground">
-                {s.label}
+                <EditableText section="stats" fieldKey={`label_${i}`}>
+                  {s.label}
+                </EditableText>
               </p>
             </motion.div>
           ))}

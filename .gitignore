@@ -39,3 +39,15 @@ next-env.d.ts
 venv/
 .venv/
 __pycache__/
+
+# environment variables
+.env
+backend/.env
+
+# sqlite
+*.db
+*.sqlite3
+
+# uploads
+backend/static/uploads/*
+!backend/static/uploads/.gitkeep

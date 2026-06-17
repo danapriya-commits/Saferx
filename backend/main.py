@@ -1,34 +1,64 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-import uvicorn
+"""
+SAFERX Admin Panel — FastAPI Application Entry Point.
+Serves the admin panel with Jinja2 templates, JWT auth, and PostgreSQL.
+"""
+import os
+from contextlib import asynccontextmanager
+from pathlib import Path
+
+from fastapi import FastAPI, Request, Depends
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+from fastapi.responses import HTMLResponse, RedirectResponse
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select, func
+from dotenv import load_dotenv
+
+load_dotenv()
+
+from database import get_db
+from models import MedicalEquipment, KnowledgeCentreArticle
+from core.deps import get_current_admin
+from routers import auth, admin_ui, admin_equipment, admin_knowledge, content, public_api, visual_editor
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Create tables on startup if they don't exist."""
+    # Ensure static/uploads directory exists
+    uploads_dir = Path(__file__).parent / "static" / "uploads"
+    uploads_dir.mkdir(parents=True, exist_ok=True)
+    yield
+
 
 app = FastAPI(
-    title="SafeRx API",
-    description="Backend API for SafeRx Medical Supplies",
-    version="0.1.0",
+    title="SafeRx Admin Panel",
+    description="Backend Admin Panel for SafeRx Medical Supplies",
+    version="1.0.0",
+    lifespan=lifespan,
 )
 
-# Configure CORS to allow the Next.js frontend to communicate with this API
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
-    ],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# Mount static files
+app.mount("/static", StaticFiles(directory=Path(__file__).parent / "static"), name="static")
 
+# Register routers
+app.include_router(auth.router)
+app.include_router(admin_ui.router)
+app.include_router(admin_equipment.router)
+app.include_router(admin_knowledge.router)
+app.include_router(content.router)
+app.include_router(public_api.router)
+app.include_router(visual_editor.router)
+
+# Jinja2 templates
+templates = Jinja2Templates(directory="templates")
+
+# ── Root redirect ──
 @app.get("/")
-def read_root():
-    return {"status": "ok", "message": "Welcome to the SafeRx API!"}
+async def root():
+    return RedirectResponse(url="/admin/login", status_code=302)
 
-@app.get("/api/health")
-def health_check():
-    return {"status": "healthy"}
 
 if __name__ == "__main__":
-    # To run this script locally:
-    # uvicorn main:app --reload --port 8000
+    import uvicorn
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)

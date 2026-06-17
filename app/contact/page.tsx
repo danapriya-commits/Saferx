@@ -4,6 +4,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { MapPin, Phone, Mail, Globe, ExternalLink } from 'lucide-react'
+import { EditableText } from '@/components/admin/EditableText'
 
 export const metadata = {
   title: 'Contact Us | SafeRx Medical Supplies',
@@ -14,14 +15,14 @@ export default function ContactPage() {
   return (
     <>
       <PageHero
-        title="Get in Touch"
-        description="Whether you have a domestic enquiry or international requirements, our team is ready to assist you with world-class medical solutions."
+        title={<EditableText section="contact" fieldKey="hero_title">Get in Touch</EditableText>}
+        description={<EditableText section="contact" fieldKey="hero_description">Whether you have a domestic enquiry or international requirements, our team is ready to assist you with world-class medical solutions.</EditableText>}
         breadcrumb="Contact"
-        eyebrow="Contact Us"
+        eyebrow={<EditableText section="contact" fieldKey="hero_eyebrow">Contact Us</EditableText>}
         backgroundImage="/images/contactsection.png"
       />
 
-      <section className="py-20 sm:py-32 relative overflow-hidden">
+      <section className="py-14 sm:py-20 relative overflow-hidden">
         {/* Subtle background decoration */}
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/5 via-background to-background" />
         
@@ -34,11 +35,11 @@ export default function ContactPage() {
               <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary group-hover:scale-110 transition-transform">
                 <Phone className="h-6 w-6" />
               </div>
-              <h3 className="mb-4 text-xl font-semibold text-foreground">Domestic Enquiry</h3>
+              <h3 className="mb-4 text-xl font-semibold text-foreground"><EditableText section="contact" fieldKey="domestic_title">Domestic Enquiry</EditableText></h3>
               <div className="space-y-3 text-muted-foreground">
-                <p className="flex items-center gap-2"><Phone className="h-4 w-4" /> +91 9043490435</p>
-                <p className="flex items-center gap-2"><Mail className="h-4 w-4" /> sales@saferxmedical.com</p>
-                <p className="flex items-center gap-2"><Mail className="h-4 w-4" /> danapriya@gmail.com</p>
+                <p className="flex items-center gap-2"><Phone className="h-4 w-4" /> <EditableText section="contact" fieldKey="domestic_phone">+91 9043490435</EditableText></p>
+                <p className="flex items-center gap-2"><Mail className="h-4 w-4" /> <EditableText section="contact" fieldKey="domestic_email1">sales@saferxmedical.com</EditableText></p>
+                <p className="flex items-center gap-2"><Mail className="h-4 w-4" /> <EditableText section="contact" fieldKey="domestic_email2">danapriya@gmail.com</EditableText></p>
               </div>
             </div>
 
@@ -47,11 +48,11 @@ export default function ContactPage() {
               <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-accent/10 text-accent group-hover:scale-110 transition-transform">
                 <MapPin className="h-6 w-6" />
               </div>
-              <h3 className="mb-4 text-xl font-semibold text-foreground">Location</h3>
+              <h3 className="mb-4 text-xl font-semibold text-foreground"><EditableText section="contact" fieldKey="location_title">Location</EditableText></h3>
               <div className="space-y-3 text-muted-foreground leading-relaxed">
-                <p>D.No.9/24, Irugur Main Road,</p>
-                <p>Irugur, Coimbatore-641103,</p>
-                <p>Tamil Nadu, India</p>
+                <p><EditableText section="contact" fieldKey="location_line1">D.No.9/24, Irugur Main Road,</EditableText></p>
+                <p><EditableText section="contact" fieldKey="location_line2">Irugur, Coimbatore-641103,</EditableText></p>
+                <p><EditableText section="contact" fieldKey="location_line3">Tamil Nadu, India</EditableText></p>
               </div>
             </div>
 
@@ -60,10 +61,10 @@ export default function ContactPage() {
               <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary group-hover:scale-110 transition-transform">
                 <Globe className="h-6 w-6" />
               </div>
-              <h3 className="mb-4 text-xl font-semibold text-foreground">International Enquiry</h3>
+              <h3 className="mb-4 text-xl font-semibold text-foreground"><EditableText section="contact" fieldKey="intl_title">International Enquiry</EditableText></h3>
               <div className="space-y-3 text-muted-foreground leading-relaxed">
-                <p className="flex items-start gap-2"><MapPin className="h-4 w-4 mt-1 shrink-0" /> 4001, Blue tower<br/>Sheikh Zayed Road, Dubai</p>
-                <p className="flex items-center gap-2 mt-4"><Mail className="h-4 w-4 shrink-0" /> intlsales@saferxmedical.com</p>
+                <p className="flex items-start gap-2"><MapPin className="h-4 w-4 mt-1 shrink-0" /> <EditableText section="contact" fieldKey="intl_address">4001, Blue tower Dubai</EditableText></p>
+                <p className="flex items-center gap-2 mt-4"><Mail className="h-4 w-4 shrink-0" /> <EditableText section="contact" fieldKey="intl_email">intlsales@saferxmedical.com</EditableText></p>
               </div>
             </div>
           </div>
@@ -74,7 +75,7 @@ export default function ContactPage() {
             {/* Contact Form */}
             <div className="rounded-3xl bg-card p-8 shadow-lg border border-border/50">
               <SectionHeading
-                title="Mail Us!!!"
+                title={<EditableText section="contact" fieldKey="form_title">Mail Us!!!</EditableText>}
                 className="mb-8"
               />
               <form className="space-y-6">

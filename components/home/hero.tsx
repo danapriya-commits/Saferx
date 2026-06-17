@@ -1,9 +1,10 @@
 'use client'
 
 import Link from 'next/link'
-import Image from 'next/image'
 import { motion } from 'motion/react'
 import { ArrowRight, ShieldCheck, Wrench, CalendarClock, Headphones } from 'lucide-react'
+import { EditableText } from '@/components/admin/EditableText'
+import { EditableImage } from '@/components/admin/EditableImage'
 
 const BADGES = [
   { icon: ShieldCheck, label: 'Certified Products' },
@@ -15,8 +16,10 @@ const BADGES = [
 export function Hero() {
   return (
     <section className="relative overflow-hidden">
-      <Image
-        src="/images/hero-icu.png"
+      <EditableImage
+        section="hero"
+        fieldKey="background_image"
+        defaultSrc="/images/hero-icu.png"
         alt="Modern hospital ICU with advanced medical equipment"
         fill
         priority
@@ -40,7 +43,9 @@ export function Hero() {
             className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-white backdrop-blur"
           >
             <span className="h-1.5 w-1.5 rounded-full bg-accent" />
-            Trusted Healthcare Technology Partner
+            <EditableText section="hero" fieldKey="badge_text">
+              Trusted Healthcare Technology Partner
+            </EditableText>
           </motion.span>
 
           <motion.h1
@@ -49,7 +54,9 @@ export function Hero() {
             transition={{ duration: 0.6, delay: 0.05 }}
             className="mt-5 text-balance text-4xl font-bold leading-[1.08] tracking-tight text-white sm:text-5xl lg:text-6xl"
           >
-            Complete Healthcare Technology Solutions for Modern Hospitals
+            <EditableText section="hero" fieldKey="title" multiline>
+              Complete Healthcare Technology Solutions for Modern Hospitals
+            </EditableText>
           </motion.h1>
 
           <motion.p
@@ -58,9 +65,9 @@ export function Hero() {
             transition={{ duration: 0.6, delay: 0.15 }}
             className="mt-6 max-w-xl text-lg leading-relaxed text-white/85"
           >
-            Delivering world-class medical equipment, hospital infrastructure,
-            diagnostics and critical-care solutions across healthcare
-            institutions.
+            <EditableText section="hero" fieldKey="description" multiline>
+              Delivering world-class medical equipment, hospital infrastructure, diagnostics and critical-care solutions across healthcare institutions.
+            </EditableText>
           </motion.p>
 
           <motion.div
@@ -73,13 +80,13 @@ export function Hero() {
               href="/solutions"
               className="inline-flex items-center gap-2 rounded-lg bg-accent px-6 py-3.5 text-sm font-semibold text-accent-foreground shadow-lg transition-transform hover:-translate-y-0.5"
             >
-              Explore Solutions <ArrowRight className="h-4 w-4" />
+              <EditableText section="hero" fieldKey="primary_button">Explore Solutions</EditableText> <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
               href="/contact"
               className="inline-flex items-center gap-2 rounded-lg border border-white/30 bg-white/10 px-6 py-3.5 text-sm font-semibold text-white backdrop-blur transition-colors hover:bg-white/20"
             >
-              Request Consultation
+              <EditableText section="hero" fieldKey="secondary_button">Request Consultation</EditableText>
             </Link>
           </motion.div>
 
@@ -89,12 +96,16 @@ export function Hero() {
             transition={{ duration: 0.6, delay: 0.4 }}
             className="mt-12 grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-4"
           >
-            {BADGES.map((b) => (
+            {BADGES.map((b, idx) => (
               <li key={b.label} className="flex items-center gap-2.5 text-white">
                 <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/15">
                   <b.icon className="h-4.5 w-4.5 text-accent" />
                 </span>
-                <span className="text-sm font-medium leading-tight">{b.label}</span>
+                <span className="text-sm font-medium leading-tight">
+                  <EditableText section="hero" fieldKey={`badge_${idx}`}>
+                    {b.label}
+                  </EditableText>
+                </span>
               </li>
             ))}
           </motion.ul>

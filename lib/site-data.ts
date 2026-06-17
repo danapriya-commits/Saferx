@@ -15,11 +15,9 @@ export const NAV_LINKS = [
   { label: 'Home', href: '/' },
   { label: 'About', href: '/about' },
   { label: 'Solutions', href: '/solutions' },
-  { label: 'Medical Equipment', href: '/equipment' },
   { label: 'Projects', href: '/projects' },
-  { label: 'Knowledge Center', href: '/knowledge-center' },
-  { label: 'Case Studies', href: '/case-studies' },
-  { label: 'Blog', href: '/blog' },
+  { label: 'Medical Equipment', href: '/equipment' },
+  { label: 'Knowledge Centre', href: '/knowledge-centre' },
   { label: 'Contact', href: '/contact' },
 ]
 
@@ -138,55 +136,26 @@ export const MEGA_MENU = [
   },
 ]
 
-export const PROJECTS = [
-  {
-    title: 'Apollo Speciality Hospital — ICU Setup',
-    category: 'Hospital Setup',
-    slug: 'hospital-setup',
-    image: '/images/project-hospital.png',
-    location: 'Bengaluru, India',
-    stat: '120-bed multi-specialty facility',
-    desc: 'Complete turnkey ICU, operation theatre and patient monitoring deployment delivered in 14 weeks.',
-  },
-  {
-    title: 'Meridian Diagnostic Center',
-    category: 'Diagnostic Centers',
-    slug: 'diagnostic-centers',
-    image: '/images/project-diagnostic.png',
-    location: 'Hyderabad, India',
-    stat: 'CT, MRI & full lab automation',
-    desc: 'End-to-end imaging and laboratory setup with installation, calibration and staff training.',
-  },
-  {
-    title: 'Sunrise Hospital — Capacity Expansion',
-    category: 'Expansion Projects',
-    slug: 'expansion-projects',
-    image: '/images/cat-imaging.png',
-    location: 'Pune, India',
-    stat: '+80 critical-care beds',
-    desc: 'Phased expansion adding NICU, cardiology and additional ICU capacity with zero downtime.',
-  },
-]
 
 export const TESTIMONIALS = [
   {
     quote:
-      'SAFERX delivered our entire ICU setup ahead of schedule. Their biomedical team is responsive and the equipment quality is outstanding.',
-    name: 'Dr. Anita Rao',
-    role: 'Medical Director, Apollo Speciality',
+      'We connected with SAFERX Medical Supplies Private Limited through an online search and are pleased with our experience. Their team provided prompt and professional responses, and the pricing offered was very reasonable compared to other suppliers. Most importantly, the quality of their face masks is highly impressive. Overall, we are very satisfied with their service and products.',
+    name: 'Arun Kumar',
+    // role: 'Medical Director, Apollo Speciality',
     rating: 5,
   },
   {
     quote:
-      'From procurement to installation and AMC, the experience has been seamless. They truly understand hospital operations.',
-    name: 'Rajesh Kumar',
-    role: 'Procurement Head, Meridian Group',
+      'I belong to ALERT NGO and use to get a first aid kit content for my customized kit for two years. You can trust and move on further if you want to do business with them. The staff and management people are very gentle and trustworthy. Also, their helpful nature helps to get more good suggestions and friendly approach with them.',
+    name: 'Karthik',
+    // role: 'Procurement Head, Meridian Group',
     rating: 5,
   },
   {
     quote:
-      'Reliable, compliant and always available. Our diagnostic uptime improved significantly after partnering with SAFERX.',
-    name: 'Dr. Vikram Shah',
+      'The company making quality masks & the supplies are in reasonable budget. Good co-ordination, Even though after selecting the melbourne mask they just send me a sample of products to my address for free of cost & confirmed the products with our preferred grades. thanks a lot Dhanapriya mam. Fully satisfied.',
+    name: 'Vishnu Thangavel',
     role: 'Chief Radiologist, Sunrise Hospital',
     rating: 5,
   },

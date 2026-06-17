@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block header_title %}{{ 'Edit Article' if article else 'Write New Article' }}{% endblock %}
+
+{% block content %}
+<div class="mb-8 flex items-center gap-4">
+    <a href="/admin/knowledge-centre" class="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center text-gray-500 hover:bg-gray-50 hover:text-gray-900 transition-colors shadow-sm">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+    <div>
+        <h1 class="text-2xl font-bold text-gray-900 tracking-tight">{{ 'Edit Article' if article else 'Write New Article' }}</h1>
+        <p class="text-gray-500 mt-1">Publish insightful content to your knowledge centre.</p>
+    </div>
+</div>
+
+<form action="{{ '/admin/knowledge-centre/' ~ article.id ~ '/edit' if article else '/admin/knowledge-centre/new' }}" method="POST" enctype="multipart/form-data" class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+    <div class="p-8 space-y-8">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left Column: Content -->
+            <div class="lg:col-span-2 space-y-6">
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Article Title *</label>
+                    <input type="text" name="title" value="{{ article.title if article else '' }}" required
+                           class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-600 focus:border-transparent outline-none transition-all placeholder-gray-400 font-medium text-gray-900">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">URL Slug *</label>
+                    <input type="text" name="slug" value="{{ article.slug if article else '' }}" required
+                           placeholder="e.g. how-to-maintain-icu-equipment"
+                           class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-600 focus:border-transparent outline-none transition-all placeholder-gray-400 font-medium text-gray-900">
+                    <p class="text-xs text-gray-500 mt-1">The unique URL path for this article.</p>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Excerpt</label>
+                    <textarea name="excerpt" rows="2"
+                              class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-600 focus:border-transparent outline-none transition-all placeholder-gray-400 font-medium text-gray-900">{{ article.excerpt if article else '' }}</textarea>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Full Content (HTML/Text)</label>
+                    <textarea name="content" rows="12"
+                              class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-600 focus:border-transparent outline-none transition-all placeholder-gray-400 font-medium text-gray-900 font-mono text-sm leading-relaxed">{{ article.content if article else '' }}</textarea>
+                </div>
+            </div>
+            
+            <!-- Right Column: Settings & Image -->
+            <div class="space-y-6">
+                <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                    <h3 class="font-bold text-gray-900 mb-4 pb-2 border-b border-gray-200">Publishing Details</h3>
+                    
+                    <div class="mb-4">
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Author</label>
+                        <input type="text" name="author" value="{{ article.author if article else 'Saferx Team' }}"
+                               class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-600 outline-none font-medium text-gray-900">
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Category</label>
+                        <input type="text" name="category" value="{{ article.category if article else 'Guide' }}"
+                               class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-600 outline-none font-medium text-gray-900">
+                    </div>
+                    
+                    <div class="flex items-center">
+                        <input type="checkbox" id="is_published" name="is_published" value="true" {% if article and article.is_published %}checked{% elif not article %}checked{% endif %}
+                               class="w-5 h-5 text-indigo-600 bg-white border-gray-300 rounded focus:ring-indigo-600">
+                        <label for="is_published" class="ml-3 text-sm font-bold text-gray-700">Published</label>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                    <h3 class="font-bold text-gray-900 mb-4 pb-2 border-b border-gray-200">Cover Image</h3>
+                    
+                    {% if article and article.image_url %}
+                    <div class="mb-4 rounded-lg overflow-hidden border border-gray-200">
+                        <img src="{{ article.image_url }}" alt="Cover" class="w-full h-auto">
+                    </div>
+                    {% endif %}
+                    
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Upload Image</label>
+                    <input type="file" name="image" accept="image/png, image/jpeg, image/webp"
+                           class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    <div class="bg-gray-50 px-8 py-5 border-t border-gray-200 flex justify-end gap-3">
+        <a href="/admin/knowledge-centre" class="px-6 py-2.5 bg-white border border-gray-300 rounded-lg text-gray-700 font-bold hover:bg-gray-50 transition-colors">Cancel</a>
+        <button type="submit" class="px-8 py-2.5 bg-indigo-600 rounded-lg text-white font-bold hover:bg-indigo-700 shadow-sm shadow-indigo-600/30 transition-colors">
+            {{ 'Update Article' if article else 'Publish Article' }}
+        </button>
+    </div>
+</form>
+{% endblock %}

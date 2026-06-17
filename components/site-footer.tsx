@@ -34,9 +34,16 @@ function SocialIcon({ path, label }: { path: string; label: string }) {
     </svg>
   )
 }
+import { usePathname } from 'next/navigation'
 import { COMPANY, SOLUTIONS, EQUIPMENT_CATEGORIES, WHATSAPP_NUMBER } from '@/lib/site-data'
 
 export function SiteFooter() {
+  const pathname = usePathname()
+  
+  if (pathname?.startsWith('/admin')) {
+    return null
+  }
+
   return (
     <footer className="bg-foreground text-background">
       <div className="mx-auto max-w-[1536px] container-px py-16">
@@ -134,18 +141,11 @@ export function SiteFooter() {
           </div>
         </div>
 
-        <div className="mt-14 flex flex-col items-center justify-between gap-4 border-t border-background/15 pt-8 text-xs text-background/55 md:flex-row">
+        <div className="mt-14 flex flex-col items-center justify-center border-t border-background/15 pt-8 text-xs text-background/55 text-center">
           <p>
             &copy; {new Date().getFullYear()} {COMPANY.name}. All rights reserved.
           </p>
-          <div className="flex flex-wrap items-center gap-5">
-            <Link href="/about" className="hover:text-accent">About</Link>
-            <Link href="/knowledge-center" className="hover:text-accent">Knowledge Center</Link>
-            <Link href="/case-studies" className="hover:text-accent">Case Studies</Link>
-            <Link href="/contact" className="inline-flex items-center gap-1 hover:text-accent">
-              Contact <ArrowRight className="h-3 w-3" />
-            </Link>
-          </div>
+
         </div>
       </div>
     </footer>

@@ -1,5 +1,7 @@
+'use client'
+
 import Link from 'next/link'
-import Image from 'next/image'
+import { EditableImage } from '@/components/admin/EditableImage'
 import { ArrowRight } from 'lucide-react'
 import { SectionHeading } from '@/components/section'
 import { Reveal } from '@/components/reveal'
@@ -7,7 +9,7 @@ import { EQUIPMENT_CATEGORIES } from '@/lib/site-data'
 
 export function EquipmentCategories() {
   return (
-    <section className="bg-secondary/40 py-20 sm:py-28">
+    <section className="bg-secondary/40 py-14 sm:py-20">
       <div className="mx-auto max-w-[1536px] container-px">
         <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
           <SectionHeading
@@ -28,8 +30,10 @@ export function EquipmentCategories() {
             <Reveal key={c.slug} delay={i * 0.06}>
               <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
                 <div className="relative aspect-[16/10] overflow-hidden">
-                  <Image
-                    src={c.image}
+                  <EditableImage
+                    section="home_categories"
+                    fieldKey={`image_${c.slug}`}
+                    defaultSrc={c.image}
                     alt={c.title}
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-105"

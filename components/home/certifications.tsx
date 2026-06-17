@@ -1,3 +1,5 @@
+'use client'
+
 import { BadgeCheck } from 'lucide-react'
 import { CERTIFICATIONS } from '@/lib/site-data'
 import { Reveal } from '@/components/reveal'
