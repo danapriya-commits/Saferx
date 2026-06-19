@@ -28,15 +28,15 @@ import { usePathname } from 'next/navigation'
 export function WhatsAppWidget() {
   const [open, setOpen] = useState(false)
   const [step, setStep] = useState<Step>('intro')
+  const [topic, setTopic] = useState<string>('')
+  const [name, setName] = useState('')
+  const [phone, setPhone] = useState('')
+  const [requirement, setRequirement] = useState('')
   const pathname = usePathname()
 
   if (pathname?.startsWith('/admin')) {
     return null
   }
-  const [topic, setTopic] = useState<string>('')
-  const [name, setName] = useState('')
-  const [phone, setPhone] = useState('')
-  const [requirement, setRequirement] = useState('')
 
   const reset = () => {
     setStep('intro')
@@ -54,7 +54,7 @@ export function WhatsAppWidget() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     const message = encodeURIComponent(
-      `Hi SAFERX team! 👋\n\nTopic: ${topic}\nName: ${name}\nPhone: ${phone}\nRequirement: ${requirement}`,
+      `Hi Saferx team! 👋\n\nTopic: ${topic}\nName: ${name}\nPhone: ${phone}\nRequirement: ${requirement}`,
     )
     window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, '_blank')
     setStep('done')
@@ -96,7 +96,7 @@ export function WhatsAppWidget() {
           {/* body */}
           <div className="max-h-[60vh] space-y-3 overflow-y-auto bg-[#ECE5DD] px-4 py-4">
             <div className="max-w-[85%] rounded-xl rounded-tl-sm bg-white px-3.5 py-2.5 text-sm text-gray-800 shadow-sm">
-              Hello! Welcome to <strong>SAFERX Medical</strong>. How can we help
+              Hello! Welcome to <strong>Saferx Medical</strong>. How can we help
               you today?
             </div>
 
@@ -194,7 +194,7 @@ export function WhatsAppWidget() {
         className="fixed bottom-5 right-4 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg transition-transform hover:scale-105 sm:right-6"
       >
         {!open && (
-          <span className="absolute inset-0 animate-ping rounded-full bg-[#25D366] opacity-40" />
+          <span className="absolute inset-0 animate-ping rounded-full bg-[#25D366] opacity-40" style={{ animationIterationCount: 3 }} />
         )}
         {open ? <X className="h-6 w-6" /> : <WhatsAppIcon className="h-8 w-8" />}
       </button>

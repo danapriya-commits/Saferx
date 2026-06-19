@@ -68,9 +68,10 @@ export function WhyChoose() {
                 section="home_why_choose"
                 fieldKey="main_image"
                 defaultSrc="/images/team.png"
-                alt="SAFERX biomedical engineering team"
+                alt="Saferx biomedical engineering team"
                 width={720}
                 height={560}
+                sizes="(max-width: 1024px) 100vw, 50vw"
                 className="h-full w-full object-cover"
               />
             </div>
@@ -88,7 +89,7 @@ export function WhyChoose() {
         <div>
           <span className="mb-3 inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-primary">
             <span className="h-1.5 w-1.5 rounded-full bg-accent" />
-            <EditableText section="home_why_choose" fieldKey="eyebrow">Why Choose SAFERX</EditableText>
+            <EditableText section="home_why_choose" fieldKey="eyebrow">Why Choose Saferx</EditableText>
           </span>
           <h2 className="text-pretty text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
             <EditableText section="home_why_choose" fieldKey="title">A partner you can trust with patient lives</EditableText>

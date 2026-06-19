@@ -10,16 +10,25 @@ export function ScrollToTop() {
   const [visible, setVisible] = useState(false)
   const pathname = usePathname()
 
-  if (pathname?.startsWith('/admin')) {
-    return null
-  }
-
   useEffect(() => {
-    const onScroll = () => setVisible(window.scrollY > 400)
+    let ticking = false
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setVisible(window.scrollY > 400)
+          ticking = false
+        })
+        ticking = true
+      }
+    }
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
+
+  if (pathname?.startsWith('/admin')) {
+    return null
+  }
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })

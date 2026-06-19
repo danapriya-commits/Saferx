@@ -5,9 +5,8 @@ import { motion, useInView } from 'motion/react'
 import { EditableText } from '@/components/admin/EditableText'
 
 const STATS = [
-  { value: 500, suffix: '+', label: 'Installations' },
-  { value: 100, suffix: '+', label: 'Healthcare Clients' },
-  { value: 15, suffix: '+', label: 'Years Experience' },
+  { value: 50, suffix: '+', label: 'Healthcare Clients' },
+  { value: 6, suffix: '+', label: 'Years Experience' },
   { value: 24, suffix: '/7', label: 'Support' },
 ]
 
@@ -43,7 +42,7 @@ export function Stats() {
   return (
     <section className="relative z-10 -mt-12 px-5 sm:px-8 lg:px-12">
       <div className="mx-auto max-w-6xl">
-        <div className="glass grid grid-cols-2 gap-px overflow-hidden rounded-2xl bg-border/60 shadow-xl md:grid-cols-4">
+        <div className="glass grid grid-cols-2 gap-px overflow-hidden rounded-2xl bg-border/60 shadow-xl md:grid-cols-3">
           {STATS.map((s, i) => (
             <motion.div
               key={s.label}

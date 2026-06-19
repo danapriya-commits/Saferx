@@ -6,9 +6,11 @@ import { ArrowRight, Clock } from 'lucide-react'
 import { SectionHeading } from '@/components/section'
 import { useState, useEffect } from 'react'
 import { EditableImage } from '@/components/admin/EditableImage'
+import { BLOG_POSTS } from '@/lib/site-data'
 
 export function BlogPreview() {
   const [posts, setPosts] = useState<any[]>([])
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     async function fetchPosts() {
@@ -16,10 +18,19 @@ export function BlogPreview() {
         const res = await fetch('/api/public/knowledge')
         if (res.ok) {
           const data = await res.json()
-          setPosts(data.articles?.slice(0, 3) || [])
+          if (data.articles && data.articles.length > 0) {
+            setPosts(data.articles.slice(0, 3))
+          } else {
+            setPosts(BLOG_POSTS.map(p => ({ ...p, image_url: p.image })))
+          }
+        } else {
+          setPosts(BLOG_POSTS.map(p => ({ ...p, image_url: p.image })))
         }
       } catch (e) {
         console.error("Failed to fetch blog posts", e)
+        setPosts(BLOG_POSTS.map(p => ({ ...p, image_url: p.image })))
+      } finally {
+        setIsLoading(false)
       }
     }
     fetchPosts()
@@ -31,11 +42,23 @@ export function BlogPreview() {
         eyebrow="Knowledge Center"
         title="Insights from our biomedical experts"
         description="Guidance on healthcare technology, hospital planning and equipment care."
-        cta={{ label: 'Visit the blog', href: '/knowledge-centre' }}
       />
 
       <div className="grid gap-6 md:grid-cols-3">
-        {posts.map((post, i) => (
+        {isLoading ? (
+          Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+              <div className="relative aspect-[16/10] bg-secondary skeleton" />
+              <div className="flex flex-1 flex-col p-6 space-y-4">
+                <div className="flex gap-2"><div className="h-5 w-20 bg-secondary rounded-full skeleton" /><div className="h-5 w-12 bg-secondary rounded-full skeleton" /></div>
+                <div className="h-6 w-full bg-secondary rounded-md skeleton" />
+                <div className="h-6 w-2/3 bg-secondary rounded-md skeleton" />
+                <div className="h-4 w-full bg-secondary rounded-md skeleton mt-2" />
+                <div className="h-4 w-full bg-secondary rounded-md skeleton" />
+              </div>
+            </div>
+          ))
+        ) : posts.map((post, i) => (
           <motion.article
             key={post.slug}
             initial={{ opacity: 0, y: 24 }}
@@ -44,16 +67,17 @@ export function BlogPreview() {
             transition={{ duration: 0.5, delay: i * 0.1 }}
             className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl"
           >
-            <Link href={`/knowledge-centre/${post.slug}`} className="flex flex-1 flex-col">
+            <Link href="/knowledge-centre" className="flex flex-1 flex-col">
               <div className="relative aspect-[16/10] overflow-hidden">
                 {post.image_url ? (
                   <EditableImage
-                    asImg
                     section="blog"
                     fieldKey={`image_${post.slug}`}
                     defaultSrc={post.image_url}
                     alt={post.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 ) : (
                   <div className="w-full h-full bg-gray-100 flex items-center justify-center text-gray-400">No Image</div>

@@ -88,6 +88,7 @@ export function PageHero({
             defaultSrc={backgroundImage}
             alt="Background"
             fill
+            sizes="100vw"
             className="pointer-events-none object-cover opacity-100"
             priority
           />

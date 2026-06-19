@@ -4,8 +4,8 @@ import { EditableText } from '@/components/admin/EditableText'
 import { EditableImage } from '@/components/admin/EditableImage'
 
 export const metadata = {
-  title: 'About Us | SafeRx Medical Supplies',
-  description: 'Learn about SafeRx, our mission, and the team behind our premium medical equipment solutions.',
+  title: 'About Us | Saferx Medical Supplies',
+  description: 'Learn about Saferx, our mission, and the team behind our premium medical equipment solutions.',
 }
 
 export default function AboutPage() {
@@ -29,10 +29,10 @@ export default function AboutPage() {
               <SectionHeading
                 eyebrow={<EditableText section="about" fieldKey="mission_eyebrow">Our Mission</EditableText>}
                 title={<EditableText section="about" fieldKey="mission_title">Empowering Care Providers Worldwide</EditableText>}
-                description={<EditableText section="about" fieldKey="mission_desc">Since our founding, SafeRx has been at the forefront of medical technology distribution. We believe that every healthcare facility, regardless of size, deserves access to reliable, state-of-the-art equipment.</EditableText>}
+                description={<EditableText section="about" fieldKey="mission_desc">Since our founding, Saferx has been at the forefront of medical technology distribution. We believe that every healthcare facility, regardless of size, deserves access to reliable, state-of-the-art equipment.</EditableText>}
                 className="mb-8"
               />
-              
+
               <ul className="space-y-4">
                 {[
                   { key: "point1", default: 'Over 15 years of industry excellence' },
@@ -47,7 +47,7 @@ export default function AboutPage() {
                 ))}
               </ul>
             </div>
-            
+
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-4 pt-8">
                 <div className="rounded-2xl bg-secondary/50 p-6 shadow-sm border border-border/50">
@@ -82,20 +82,22 @@ export default function AboutPage() {
       <section className="py-14 sm:py-20 bg-[#e8fafa]">
         <div className="mx-auto max-w-[1536px] container-px">
           <h2 className="text-3xl md:text-4xl font-bold text-center text-[#0a2f5c] mb-16">
-            <EditableText section="about" fieldKey="director_section_title">Director's Message</EditableText>
+            <EditableText section="about" fieldKey="director_section_title">Founder's Message</EditableText>
           </h2>
-          
+
           <div className="grid gap-12 lg:grid-cols-[400px_1fr] items-start">
             {/* Image Column */}
             <div className="relative mx-auto lg:mx-0 w-full max-w-[400px]">
-              <div className="relative aspect-square md:aspect-[4/5] w-full overflow-hidden rounded-sm shadow-md">
+              <div className="relative w-full overflow-hidden rounded-sm shadow-md bg-transparent">
                 <EditableImage
                   section="about"
                   fieldKey="director_image"
-                  defaultSrc="/images/Dana Priya.jpg"
-                  alt="G. Dana Priya"
-                  fill
-                  className="object-cover object-top"
+                  defaultSrc="/images/danapic.jpeg"
+                  alt="Dana Priya G"
+                  width={400}
+                  height={600}
+                  sizes="(max-width: 1024px) 100vw, 400px"
+                  className="w-full h-auto object-contain"
                 />
               </div>
 
@@ -103,7 +105,7 @@ export default function AboutPage() {
               <div className="mt-8 flex gap-4 pl-2 items-center">
                 <a href="https://www.linkedin.com/in/danapriyag/" className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#242e3e] text-white transition-all hover:bg-[#324056] hover:scale-105">
                   <svg viewBox="0 0 24 24" fill="currentColor" className="h-[22px] w-[22px]">
-                    <path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.55V9h3.57v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.22.79 24 1.77 24h20.45c.98 0 1.78-.78 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/>
+                    <path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.55V9h3.57v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.22.79 24 1.77 24h20.45c.98 0 1.78-.78 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z" />
                   </svg>
                 </a>
                 <a href="https://mail.google.com/mail/?view=cm&fs=1&to=danapriya@saferxmedical.com" target="_blank" rel="noopener noreferrer" className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#242e3e] text-white transition-all hover:bg-[#324056] hover:scale-105">
@@ -117,21 +119,30 @@ export default function AboutPage() {
             {/* Text Column */}
             <div className="pt-2">
               <h3 className="text-xl md:text-2xl font-semibold text-[#0a2f5c] mb-1">
-                <EditableText section="about" fieldKey="director_name">G. Dana Priya</EditableText>
+                <EditableText section="about" fieldKey="director_name">Dana Priya G</EditableText>
               </h3>
               <p className="text-base md:text-lg font-medium text-[#0a2f5c] mb-8">
-                <EditableText section="about" fieldKey="director_title">Managing Director</EditableText>
+                <EditableText section="about" fieldKey="director_title">Founder</EditableText>
               </p>
-              
+
               <div className="space-y-6 text-[#4a5568] text-[15px] leading-relaxed font-light text-justify">
                 <p>
-                  <EditableText section="about" fieldKey="director_p1">Our vision is to revolutionize healthcare by making high-quality healthcare products more accessible and affordable to all. We envision a future where individuals from all walks of life can access essential healthcare products without financial barriers. Through innovation, collaboration, and a relentless commitment to quality, we aim to redefine industry standards, ensuring that our products meet the highest standards of efficacy, safety, and affordability. Together, we are working towards a world where everyone can enjoy better health and well-being through access to the healthcare products they need.</EditableText>
+                  <EditableText section="about" fieldKey="director_p1">Healthcare should not be a privilege determined by geography or affordability. Yet, across India, many healthcare providers continue to face challenges in accessing reliable and cost-effective medical technologies that are essential for timely diagnosis and patient care.</EditableText>
                 </p>
                 <p>
-                  <EditableText section="about" fieldKey="director_p2">Our company was established in 2020, specializing in medical disposables. By 2022, we expanded our portfolio to include Pharmaceuticals, followed by entry into Nutraceuticals and Chemicals in 2023.</EditableText>
+                  <EditableText section="about" fieldKey="director_p2">Saferx was founded with a simple belief: every healthcare provider, whether located in a metropolitan city or a Tier-3 town, deserves access to dependable healthcare solutions that improve patient outcomes without compromising on quality or affordability.</EditableText>
                 </p>
                 <p>
-                  <EditableText section="about" fieldKey="director_p3">The journey of Saferx is ongoing, fueled by the steadfast support of our clients and team. With this support, we are confident in our ability to continually achieve milestones of excellence in the years ahead. Our goal is to become the most reliable supplier, providing top-quality products to over 500 customers worldwide by 2026.</EditableText>
+                  <EditableText section="about" fieldKey="director_p3">Our journey began with a commitment to bridge the gap between healthcare needs and technology access. Over time, we have expanded our focus from supplying healthcare products to becoming a trusted partner for hospitals, clinics, diagnostic centres, and healthcare entrepreneurs seeking practical, scalable, and sustainable healthcare solutions.</EditableText>
+                </p>
+                <p>
+                  <EditableText section="about" fieldKey="director_p4">At Saferx, we believe that long-term success is built on trust, ethical business practices, and delivering consistent value to our customers and partners. Every solution we offer is guided by our commitment to quality, affordability, and service excellence.</EditableText>
+                </p>
+                <p>
+                  <EditableText section="about" fieldKey="director_p5">As we continue to grow, our goal remains clear: to make essential healthcare technologies more accessible, support better patient care, and contribute meaningfully to the advancement of healthcare across India.</EditableText>
+                </p>
+                <p>
+                  <EditableText section="about" fieldKey="director_p6">Thank you for placing your trust in Saferx. We look forward to partnering with you in building a healthier future.</EditableText>
                 </p>
               </div>
             </div>
@@ -150,14 +161,14 @@ export default function AboutPage() {
             className="mb-16"
           />
 
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-8 sm:grid-cols-2 max-w-6xl mx-auto">
             {[
               {
                 id: 'member1',
                 name: 'Dana Priya',
                 role: 'Founding And Managing Director',
-                bio: 'Dana Priya is an Engineering Graduate with a Masters in Business Administration. She initiated her career as a software professional and has wide experience working with clients in Europe and USA. She has 20 years of knowledge in Manufacturing and Service industry with a strong focus towards On Time Delivery and Customer Relationship Management.',
-                image: '/images/Dana Priya.jpg',
+                bio: 'Dana Priya is an Engineering Graduate with a Masters in Business Administration and Entrepreneurship from IIM Lucknow. She initiated her career as a software professional and has transformed to healthcare. She has wide experience working with clients in Europe and USA. She has 20+ years of knowledge in Manufacturing and Service industry with a strong focus towards On Time Delivery and Customer Relationship Management.',
+                image: '/images/danapic.jpeg',
               },
               {
                 id: 'member2',
@@ -165,24 +176,19 @@ export default function AboutPage() {
                 role: 'International Business Head',
                 bio: 'Being part of Digital Marketing and an E-Commerce platform, Mamta has traversed for 22 years, building Leadership base and built Sales teams, spanning over countries from India, Malaysia, Singapore, Nepal, Uganda, Tanzania, Kenya and UAE.\n\nHer passion for Human Resources Development specially for the Youth, she has been engaged with Coaching in the Youth in NLP and behavioural skills in various summer programs.\n\nHer passion for travelling, meeting people, building relationships has been an asset for Saferx.',
                 image: '/images/mamta-new-400x400.jpg',
-              },
-              {
-                id: 'member3',
-                name: 'Suganya Suresh',
-                role: 'Marketing Executive',
-                bio: 'S. Suganya is an graduate in B. Com CA and holds post graduate diploma in Computer Applications as well. Being proficient in accounting and finance related fields, she also holds knowledge in data analysis and marketing fields. She have a adaptive mindset, ready-to-do personality and can easily interpret the customer needs to provide a accurate solution. Her confidence and keen interest towards technological, corporate relations and entrepreneurial aspects keeps her distinct.',
-                image: '/images/Suganya Suresh.png',
               }
             ].map((member, i) => (
               <div key={i} className="group relative rounded-3xl bg-card p-6 shadow-sm border border-border/50 transition-all hover:shadow-md hover:border-primary/20">
-                <div className="mb-6 aspect-square overflow-hidden rounded-2xl bg-secondary relative">
+                <div className="mb-6 w-full max-w-[280px] mx-auto overflow-hidden rounded-2xl flex justify-center bg-transparent">
                   <EditableImage
                     section="about"
                     fieldKey={`${member.id}_image`}
                     defaultSrc={member.image}
                     alt={member.name}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    width={400}
+                    height={600}
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className="w-full h-auto object-contain transition-transform duration-500 group-hover:scale-105"
                   />
                 </div>
                 <h3 className="text-xl font-semibold text-foreground">

@@ -16,8 +16,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-from database import get_db
-from models import MedicalEquipment, KnowledgeCentreArticle
+from database import get_db, engine, Base
+from models import MedicalEquipment, KnowledgeCentreArticle, AdminUser, WebsiteContent
 from core.deps import get_current_admin
 from routers import auth, admin_ui, admin_equipment, admin_knowledge, content, public_api, visual_editor
 
@@ -28,6 +28,10 @@ async def lifespan(app: FastAPI):
     # Ensure static/uploads directory exists
     uploads_dir = Path(__file__).parent / "static" / "uploads"
     uploads_dir.mkdir(parents=True, exist_ok=True)
+    
+    # Create tables on startup if they don't exist
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
     yield
 
 

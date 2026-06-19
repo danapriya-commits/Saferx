@@ -59,6 +59,8 @@ export function SiteFooter() {
                 <a
                   key={s.label}
                   href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   aria-label={s.label}
                   className="flex h-9 w-9 items-center justify-center rounded-lg bg-background/10 text-background transition-colors hover:bg-accent hover:text-accent-foreground"
                 >

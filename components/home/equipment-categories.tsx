@@ -36,6 +36,7 @@ export function EquipmentCategories() {
                     defaultSrc={c.image}
                     alt={c.title}
                     fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                   <span className="absolute left-3 top-3 flex h-10 w-10 items-center justify-center rounded-lg bg-card/90 text-primary backdrop-blur">

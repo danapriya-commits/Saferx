@@ -7,6 +7,8 @@ from database import get_db
 from models import AdminUser
 from core.security import SECRET_KEY, ALGORITHM
 
+import os
+
 async def get_current_admin(request: Request, db: AsyncSession = Depends(get_db)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -36,6 +38,11 @@ async def get_current_admin(request: Request, db: AsyncSession = Depends(get_db)
     except jwt.PyJWTError:
         raise credentials_exception
         
+    admin_email = os.environ.get("ADMIN_EMAIL")
+    if admin_email and email == admin_email:
+        # Return a mock AdminUser so it satisfies dependencies
+        return AdminUser(email=email, is_active=True)
+
     result = await db.execute(select(AdminUser).where(AdminUser.email == email))
     user = result.scalars().first()
     if user is None or not user.is_active:

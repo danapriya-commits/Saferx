@@ -16,6 +16,8 @@ class LoginRequest(BaseModel):
     email: str
     password: str
 
+import os
+
 @router.post("/login")
 async def login_api(
     req: LoginRequest,
@@ -23,18 +25,26 @@ async def login_api(
     db: AsyncSession = Depends(get_db)
 ):
     """JSON API to authenticate and set cookie."""
-    result = await db.execute(select(AdminUser).where(AdminUser.email == req.email))
-    admin = result.scalars().first()
+    admin_email = os.environ.get("ADMIN_EMAIL")
+    admin_password = os.environ.get("ADMIN_PASSWORD")
 
-    if not admin or not verify_password(req.password, admin.hashed_password):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid email or password",
-        )
+    # Check against environment variables first
+    if admin_email and admin_password and req.email == admin_email and req.password == admin_password:
+        pass # Valid env credentials
+    else:
+        # Fallback to database check
+        result = await db.execute(select(AdminUser).where(AdminUser.email == req.email))
+        admin = result.scalars().first()
+
+        if not admin or not verify_password(req.password, admin.hashed_password):
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid email or password",
+            )
 
     # Create JWT token
     token = create_access_token(data={
-        "sub": admin.email,
+        "sub": req.email,
     })
 
     # Set HttpOnly cookie for the frontend

@@ -20,11 +20,11 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: 'SAFERX Medical Supplies | Complete Healthcare Technology Solutions',
-    template: '%s | SAFERX Medical Supplies',
+    default: 'Saferx Medical Supplies | Complete Healthcare Technology Solutions',
+    template: '%s | Saferx Medical Supplies',
   },
   description:
-    'SAFERX delivers world-class medical equipment, hospital infrastructure, diagnostics and critical care solutions for modern healthcare institutions.',
+    'Saferx delivers world-class medical equipment, hospital infrastructure, diagnostics and critical care solutions for modern healthcare institutions.',
   generator: 'v0.app',
   keywords: [
     'medical equipment',
@@ -46,16 +46,15 @@ export default async function RootLayout({
   // Fetch published content safely on server-side
   let initialContent = {}
   try {
-    // We use no-store to ensure the page always reflects the latest published changes.
-    // In production, this can be changed to use ISR via next: { revalidate: 60 }
-    const res = await fetch('http://127.0.0.1:8000/api/editor/content?status=published', { 
-      cache: 'no-store' 
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000';
+    const res = await fetch(`${apiUrl}/api/editor/content?status=published`, { 
+      next: { revalidate: 60 },
     })
     if (res.ok) {
       initialContent = await res.json()
     }
   } catch (err) {
-    console.error('Failed to fetch initial content server-side:', err)
+    // Silently continue — the site works fine with defaults when the API is unavailable
   }
 
   return (

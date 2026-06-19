@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useMemo, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { PageHero } from '@/components/section'
 import { EQUIPMENT_CATEGORIES } from '@/lib/equipment-data'
 import { ProductCard } from '@/components/product-card'
@@ -10,7 +11,7 @@ import { Search, ShieldCheck, Wrench, Settings2, Activity, Phone } from 'lucide-
 import Link from 'next/link'
 import { EditableText } from '@/components/admin/EditableText'
 import { useContent } from '@/components/admin/ContentProvider'
-import { Plus } from 'lucide-react'
+import { Plus, AlertTriangle } from 'lucide-react'
 
 export default function EquipmentPage() {
   const [activeCategory, setActiveCategory] = useState<string | 'All'>('All')
@@ -20,7 +21,13 @@ export default function EquipmentPage() {
   const [equipmentList, setEquipmentList] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
+  const [deletingProductId, setDeletingProductId] = useState<string | null>(null)
+  const [mounted, setMounted] = useState(false)
   const { isEditing } = useContent()
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const fetchEquipment = async () => {
     try {
@@ -39,6 +46,29 @@ export default function EquipmentPage() {
   useEffect(() => {
     fetchEquipment()
   }, [])
+
+  const handleAddEquipment = async () => {
+    try {
+      const res = await fetch('/api/editor/equipment/new', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: "New Equipment",
+          short_description: "Click to edit.",
+          description: "",
+          category: "General",
+          image_url: ""
+        })
+      })
+      if (res.ok) {
+        fetchEquipment()
+      } else {
+        alert('Failed to add equipment')
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
 
   // Filter products based on active category and search query
   const filteredProducts = useMemo(() => {
@@ -114,8 +144,21 @@ export default function EquipmentPage() {
             {/* Product Grid */}
             <div className="flex-1 w-full">
               {isLoading ? (
-                <div className="flex justify-center py-20">
-                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+                <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+                  {Array.from({ length: 6 }).map((_, i) => (
+                    <div key={i} className="flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+                      <div className="relative aspect-[4/3] bg-secondary/30 skeleton" />
+                      <div className="flex flex-1 flex-col p-6 space-y-4">
+                        <div className="flex justify-between"><div className="h-5 w-24 bg-primary/10 rounded-full skeleton" /><div className="h-5 w-20 bg-secondary rounded-full skeleton" /></div>
+                        <div className="h-6 w-3/4 bg-secondary rounded-md skeleton" />
+                        <div className="space-y-2 mt-4"><div className="h-4 w-full bg-secondary rounded-md skeleton" /><div className="h-4 w-full bg-secondary rounded-md skeleton" /><div className="h-4 w-2/3 bg-secondary rounded-md skeleton" /></div>
+                        <div className="mt-auto pt-4 grid grid-cols-2 gap-3 border-t border-border/50">
+                          <div className="h-9 bg-secondary rounded-lg skeleton" />
+                          <div className="h-9 bg-secondary rounded-lg skeleton" />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               ) : filteredProducts.length > 0 ? (
                 <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
@@ -155,18 +198,11 @@ export default function EquipmentPage() {
                       />
                       {isEditing && (
                         <button
-                          onClick={async () => {
-                            if (confirm('Are you sure you want to delete this equipment?')) {
-                              try {
-                                const res = await fetch(`/api/editor/equipment/${product.id}`, { method: 'DELETE' });
-                                if (res.ok) fetchEquipment();
-                                else alert('Failed to delete equipment');
-                              } catch (e) {
-                                console.error(e);
-                              }
-                            }
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            setDeletingProductId(product.id)
                           }}
-                          className="absolute -top-3 -right-3 z-10 hidden group-hover/edit:flex h-8 w-8 items-center justify-center rounded-full bg-red-600 text-white shadow-lg hover:bg-red-700 transition-colors"
+                          className="absolute -top-3 -right-3 z-10 hidden group-hover/edit:flex h-8 w-8 items-center justify-center rounded-full bg-red-100 text-red-600 shadow-sm hover:bg-red-600 hover:text-white transition-colors"
                           title="Delete Equipment"
                         >
                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
@@ -176,7 +212,7 @@ export default function EquipmentPage() {
                   ))}
                   {isEditing && (
                     <button 
-                      onClick={() => setIsAddModalOpen(true)}
+                      onClick={handleAddEquipment}
                       className="group flex flex-col items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-border bg-secondary/10 hover:bg-secondary/30 transition-all duration-300 hover:-translate-y-1 min-h-[350px] cursor-pointer"
                     >
                       <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors mb-4">
@@ -365,6 +401,46 @@ export default function EquipmentPage() {
             fetchEquipment()
           }}
         />
+      )}
+
+      {mounted && deletingProductId && createPortal(
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-background/80 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+          <div className="bg-card w-full max-w-sm rounded-2xl shadow-xl border border-border p-6 animate-in zoom-in-95 duration-200">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="h-10 w-10 rounded-full bg-destructive/10 flex items-center justify-center shrink-0">
+                <AlertTriangle className="h-5 w-5 text-destructive" />
+              </div>
+              <h3 className="text-lg font-bold text-foreground">Delete Equipment</h3>
+            </div>
+            <p className="text-muted-foreground text-sm mb-6 ml-14">
+              Are you sure you want to delete this equipment? This action cannot be undone.
+            </p>
+            <div className="flex items-center justify-end gap-3">
+              <button
+                onClick={() => setDeletingProductId(null)}
+                className="px-4 py-2 rounded-xl text-sm font-semibold hover:bg-muted transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={async () => {
+                  try {
+                    const res = await fetch(`/api/editor/equipment/${deletingProductId}`, { method: 'DELETE' });
+                    if (res.ok) fetchEquipment();
+                    else alert('Failed to delete equipment');
+                  } catch (e) {
+                    console.error(e);
+                  }
+                  setDeletingProductId(null)
+                }}
+                className="px-5 py-2 rounded-xl text-sm font-semibold bg-destructive text-destructive-foreground hover:bg-destructive/90 transition-colors shadow-sm"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>,
+        document.body
       )}
 
       {/* Render Add Equipment Modal */}

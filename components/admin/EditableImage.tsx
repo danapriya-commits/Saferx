@@ -26,7 +26,7 @@ export function EditableImage({ section, fieldKey, defaultSrc, className, asImg,
     return () => el.removeEventListener('click', stopPropagation)
   }, [])
 
-  const currentSrc = content[section]?.[fieldKey] ?? defaultSrc
+  const currentSrc = content[section]?.[fieldKey] || defaultSrc || '/images/placeholder.jpg'
 
   if (!isEditing) {
     if (asImg) {

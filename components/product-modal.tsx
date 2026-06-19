@@ -1,4 +1,7 @@
-import { useEffect } from 'react'
+'use client'
+
+import { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 import Image from 'next/image'
 import Link from 'next/link'
 import { X, CheckCircle2, ChevronRight, Settings, HeartPulse, Building2, Wrench } from 'lucide-react'
@@ -14,8 +17,10 @@ interface ProductModalProps {
 }
 
 export function ProductModal({ product, allProducts = [], onClose, onSelectProduct }: ProductModalProps) {
-  // Prevent body scroll when modal is open
+  const [mounted, setMounted] = useState(false)
+
   useEffect(() => {
+    setMounted(true)
     document.body.style.overflow = 'hidden'
     return () => {
       document.body.style.overflow = 'unset'
@@ -35,8 +40,10 @@ export function ProductModal({ product, allProducts = [], onClose, onSelectProdu
     (p) => p.category === product.category && p.id !== product.id
   ).slice(0, 2)
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 md:p-12">
+  if (!mounted) return null
+
+  return createPortal(
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 md:p-12">
       {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
@@ -57,7 +64,7 @@ export function ProductModal({ product, allProducts = [], onClose, onSelectProdu
         </div>
 
         {/* Content Area */}
-        <div className="flex flex-col overflow-y-auto md:flex-row">
+        <div className="flex flex-1 min-h-0 flex-col overflow-y-auto md:flex-row">
           
           {/* Left Side: Sticky Image & Quick CTA */}
           <div className="md:w-2/5 md:shrink-0 bg-secondary/20 p-6 md:p-8 flex flex-col">
@@ -68,6 +75,7 @@ export function ProductModal({ product, allProducts = [], onClose, onSelectProdu
                 defaultSrc={product.image}
                 alt={product.name}
                 fill
+                sizes="(max-width: 768px) 100vw, 40vw"
                 className="object-cover"
               />
             </div>
@@ -162,7 +170,7 @@ export function ProductModal({ product, allProducts = [], onClose, onSelectProdu
                       className="group flex cursor-pointer items-center gap-4 rounded-xl border border-border bg-card p-3 transition-all hover:border-primary/50 hover:shadow-md"
                     >
                       <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-secondary/30">
-                        <EditableImage section="equipment" fieldKey={`image_${related.id}`} defaultSrc={related.image} alt={related.name} fill className="object-cover" />
+                        <EditableImage section="equipment" fieldKey={`image_${related.id}`} defaultSrc={related.image} alt={related.name} fill sizes="64px" className="object-cover" />
                       </div>
                       <div>
                         <h4 className="font-medium text-sm text-foreground group-hover:text-primary transition-colors line-clamp-1">{related.name}</h4>
@@ -177,6 +185,7 @@ export function ProductModal({ product, allProducts = [], onClose, onSelectProdu
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   )
 }

@@ -18,7 +18,7 @@ export function FeaturedSolutions() {
         center
         eyebrow={<EditableText section="featured_solutions" fieldKey="eyebrow">What We Do</EditableText>}
         title={<EditableText section="featured_solutions" fieldKey="title" multiline>End-to-end solutions for every department</EditableText>}
-        description={<EditableText section="featured_solutions" fieldKey="description" multiline>From critical care to laboratory automation, SAFERX equips hospitals with reliable, certified technology backed by lifetime service.</EditableText>}
+        description={<EditableText section="featured_solutions" fieldKey="description" multiline>From critical care to laboratory automation, Saferx equips hospitals with reliable, certified technology backed by lifetime service.</EditableText>}
       />
 
       <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

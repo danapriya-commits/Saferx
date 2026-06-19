@@ -140,9 +140,9 @@ export const MEGA_MENU = [
 export const TESTIMONIALS = [
   {
     quote:
-      'We connected with SAFERX Medical Supplies Private Limited through an online search and are pleased with our experience. Their team provided prompt and professional responses, and the pricing offered was very reasonable compared to other suppliers. Most importantly, the quality of their face masks is highly impressive. Overall, we are very satisfied with their service and products.',
-    name: 'Arun Kumar',
-    // role: 'Medical Director, Apollo Speciality',
+      'Saferx team has installed ECG 3 Channel machine. It was user friendly and easy to operate will full interpretation. They installation was very helpful and Supportive.',
+    name: 'Dr.Abinesh kumar',
+    role: 'Adhigarathy Primay Health Centre',
     rating: 5,
   },
   {
@@ -154,9 +154,9 @@ export const TESTIMONIALS = [
   },
   {
     quote:
-      'The company making quality masks & the supplies are in reasonable budget. Good co-ordination, Even though after selecting the melbourne mask they just send me a sample of products to my address for free of cost & confirmed the products with our preferred grades. thanks a lot Dhanapriya mam. Fully satisfied.',
-    name: 'Vishnu Thangavel',
-    role: 'Chief Radiologist, Sunrise Hospital',
+      'We connected with Saferx Medical Supplies Private Limited through an online search and are pleased with our experience. Their team provided prompt and professional responses, and the pricing offered was very reasonable compared to other suppliers. Most importantly, the quality of their face masks is highly impressive. Overall, we are very satisfied with their service and products.',
+    name: 'Arun Kumar',
+    // role: 'Medical Director, Apollo Speciality',
     rating: 5,
   },
 ]
@@ -203,11 +203,11 @@ export const BLOG_POSTS = [
   },
 ]
 
-export const WHATSAPP_NUMBER = '919000000000'
+export const WHATSAPP_NUMBER = '7845555955'
 
 export const COMPANY = {
   name: 'Dataprox360',
-  short: 'Dataprox360',
+  short: 'Saferx Medical',
   phone: '+91 9043490435',
   email: 'sales@saferxmedical.com',
   address: 'D.No.9/24, Irugur Main Road, Irugur, Coimbatore-641103, Tamil Nadu, India',

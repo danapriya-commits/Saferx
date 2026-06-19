@@ -7,7 +7,10 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # We default to sqlite for local dev, but support postgres
-SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL", "sqlite+aiosqlite:///./saferx.db")
+SQLALCHEMY_DATABASE_URL = os.environ.get("DATABASE_URL", "")
+
+if not SQLALCHEMY_DATABASE_URL:
+    raise ValueError("No DATABASE_URL set for FastAPI application. Check .env file.")
 
 # For sqlite we need connect_args to allow multithreading, but asyncpg doesn't use it
 connect_args = {}

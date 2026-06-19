@@ -1,4 +1,8 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+
+if (!API_BASE_URL) {
+  console.warn("NEXT_PUBLIC_API_URL is not set. Please check your .env.local file.");
+}
 
 /**
  * Utility for making HTTP requests from the Next.js frontend to the Python backend.

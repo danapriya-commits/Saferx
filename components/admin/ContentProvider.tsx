@@ -51,7 +51,10 @@ export function ContentProvider({
 
       const fetchDrafts = () => {
         fetch('/api/editor/content?status=draft')
-          .then(res => res.json())
+          .then(async res => {
+            if (!res.ok) throw new Error('Failed to fetch draft content: ' + res.statusText);
+            return res.json();
+          })
           .then(data => {
             if (data && Object.keys(data).length > 0) {
               setContent(data)
@@ -65,18 +68,8 @@ export function ContentProvider({
       if (shouldEdit) {
         setIsEditing(true)
         fetchDrafts()
-      } else {
-        if (Object.keys(initialContent || {}).length === 0) {
-          fetch('/api/editor/content?status=published')
-            .then(res => res.json())
-            .then(data => {
-              if (data && Object.keys(data).length > 0) {
-                setContent(data)
-              }
-            })
-            .catch(err => console.error('Failed to fetch published content:', err))
-        }
       }
+      // For non-editor visitors: SSR already provided initialContent — no client fetch needed.
 
       // Listen for RESET_STATE to avoid hard iframe reloads
       const handleMessage = (event: MessageEvent) => {

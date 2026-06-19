@@ -14,16 +14,17 @@ export function Logo({
     <Link
       href="/"
       className={cn('inline-flex items-center', className)}
-      aria-label="SAFERX Medical Supplies home"
+      aria-label="Saferx Medical Supplies home"
     >
       <EditableImage
         section="global"
-        fieldKey="logo_image"
-        defaultSrc="/images/logo.png"
-        alt="SafeRx Medical Supplies Logo"
+        fieldKey={variant === 'light' ? 'footer_logo_image' : 'logo_image'}
+        defaultSrc={variant === 'light' ? '/images/footerlogo.jpg' : '/images/logo.png'}
+        alt="Saferx Medical Supplies Logo"
         width={300}
         height={300}
         priority
+        sizes="300px"
         className="h-20 md:h-24 w-auto object-contain"
       />
     </Link>

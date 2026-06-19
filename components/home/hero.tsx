@@ -23,6 +23,7 @@ export function Hero() {
         alt="Modern hospital ICU with advanced medical equipment"
         fill
         priority
+        sizes="100vw"
         className="object-cover"
       />
       <div className="absolute inset-0 bg-gradient-to-r from-primary/95 via-primary/85 to-primary/40" />

@@ -12,7 +12,7 @@ export function Testimonials() {
         <SectionHeading
           eyebrow="Testimonials"
           title="What healthcare leaders say about us"
-          description="We measure success by the trust of the hospitals and clinics we equip."
+          description="We measure success from the trust of the clients"
         />
 
         <div className="grid gap-6 lg:grid-cols-3">

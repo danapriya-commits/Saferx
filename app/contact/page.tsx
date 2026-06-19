@@ -1,14 +1,11 @@
 import { PageHero, SectionHeading } from '@/components/section'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Button } from '@/components/ui/button'
-import { Label } from '@/components/ui/label'
 import { MapPin, Phone, Mail, Globe, ExternalLink } from 'lucide-react'
 import { EditableText } from '@/components/admin/EditableText'
+import { ContactForm } from '@/components/contact-form'
 
 export const metadata = {
-  title: 'Contact Us | SafeRx Medical Supplies',
-  description: 'Get in touch with SafeRx for domestic and international enquiries.',
+  title: 'Contact Us | Saferx Medical Supplies',
+  description: 'Get in touch with Saferx for domestic and international enquiries.',
 }
 
 export default function ContactPage() {
@@ -78,35 +75,7 @@ export default function ContactPage() {
                 title={<EditableText section="contact" fieldKey="form_title">Mail Us!!!</EditableText>}
                 className="mb-8"
               />
-              <form className="space-y-6">
-                <div className="space-y-2">
-                  <Label htmlFor="name">Your name</Label>
-                  <Input id="name" placeholder="John Doe" className="bg-background/50" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="email">Your email</Label>
-                  <Input id="email" type="email" placeholder="john@example.com" className="bg-background/50" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="subject">Subject</Label>
-                  <Input id="subject" placeholder="How can we help?" className="bg-background/50" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="number">Your Number</Label>
-                  <Input id="number" type="tel" placeholder="+1 (555) 000-0000" className="bg-background/50" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="message">Your message (optional)</Label>
-                  <Textarea 
-                    id="message" 
-                    placeholder="Tell us about your requirements..." 
-                    className="min-h-[120px] bg-background/50" 
-                  />
-                </div>
-                <Button type="button" className="w-full text-base h-12">
-                  Submit
-                </Button>
-              </form>
+              <ContactForm />
             </div>
 
             {/* Google Map */}

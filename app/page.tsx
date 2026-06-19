@@ -5,7 +5,6 @@ import { EquipmentCategories } from '@/components/home/equipment-categories'
 import { WhyChoose } from '@/components/home/why-choose'
 import { Projects } from '@/components/home/projects'
 import { Testimonials } from '@/components/home/testimonials'
-import { Certifications } from '@/components/home/certifications'
 import { BlogPreview } from '@/components/home/blog-preview'
 import { CTA } from '@/components/home/cta'
 
@@ -19,7 +18,6 @@ export default function HomePage() {
       <WhyChoose />
       <Projects />
       <Testimonials />
-      <Certifications />
       <BlogPreview />
       <CTA />
     </>

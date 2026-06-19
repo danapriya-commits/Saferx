@@ -11,8 +11,9 @@ export function generateStaticParams() {
   }))
 }
 
-export default function SolutionDetail({ params }: { params: { slug: string } }) {
-  const solution = SOLUTIONS_DATA.find((s) => s.slug === params.slug)
+export default async function SolutionDetail({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const solution = SOLUTIONS_DATA.find((s) => s.slug === slug)
 
   if (!solution) {
     notFound()
