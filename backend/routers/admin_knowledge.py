@@ -112,6 +112,17 @@ async def update_article(
                 file_path = UPLOAD_DIR / filename
                 with open(file_path, "wb") as f:
                     f.write(file_content)
+                
+                # Delete old image if it exists
+                if article.image_url and article.image_url.startswith("/static/uploads/"):
+                    old_filename = article.image_url.split("/")[-1]
+                    old_filepath = UPLOAD_DIR / old_filename
+                    if old_filepath.exists():
+                        try:
+                            old_filepath.unlink()
+                        except Exception as e:
+                            print(f"Failed to delete old image {old_filepath}: {e}")
+                
                 article.image_url = f"/static/uploads/{filename}"
 
     article.title = title

@@ -114,6 +114,17 @@ async def update_equipment(
                 file_path = UPLOAD_DIR / filename
                 with open(file_path, "wb") as f:
                     f.write(file_content)
+                
+                # Delete old image if it exists
+                if equipment.image_url and equipment.image_url.startswith("/static/uploads/"):
+                    old_filename = equipment.image_url.split("/")[-1]
+                    old_filepath = UPLOAD_DIR / old_filename
+                    if old_filepath.exists():
+                        try:
+                            old_filepath.unlink()
+                        except Exception as e:
+                            print(f"Failed to delete old image {old_filepath}: {e}")
+                
                 equipment.image_url = f"/static/uploads/{filename}"
 
     equipment.title = title

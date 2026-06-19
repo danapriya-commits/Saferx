@@ -1,6 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+from pydantic import BaseModel
+import os
+import smtplib
+from email.message import EmailMessage
 
 from database import get_db
 from models import MedicalEquipment, KnowledgeCentreArticle
@@ -96,3 +100,42 @@ async def get_single_knowledge(slug: str, db: AsyncSession = Depends(get_db)):
         "image_url": article.image_url,
         "is_published": article.is_published
     }
+
+class ContactMessage(BaseModel):
+    name: str
+    email: str
+    subject: str
+    number: str
+    message: str = ""
+
+@router.post("/contact")
+async def submit_contact(data: ContactMessage):
+    recipient = os.environ.get("FEEDBACK_EMAIL", "danapriya@saferxmedical.com")
+    
+    msg = EmailMessage()
+    msg.set_content(f"Name: {data.name}\nEmail: {data.email}\nPhone: {data.number}\n\nMessage:\n{data.message}")
+    msg['Subject'] = f"New Feedback: {data.subject}"
+    msg['From'] = data.email
+    msg['To'] = recipient
+
+    smtp_server = os.environ.get("SMTP_SERVER", "smtp.gmail.com")
+    smtp_port = int(os.environ.get("SMTP_PORT", 587))
+    smtp_user = os.environ.get("SMTP_USERNAME")
+    smtp_pass = os.environ.get("SMTP_PASSWORD")
+
+    try:
+        if smtp_user and smtp_pass:
+            with smtplib.SMTP(smtp_server, smtp_port) as server:
+                server.starttls()
+                server.login(smtp_user, smtp_pass)
+                server.send_message(msg)
+        else:
+            print(f"---      TO {recipient} ---")
+            print(msg.as_string())
+            print("---------------------------------------")
+            
+        return {"status": "success", "message": "Feedback submitted successfully."}
+    except Exception as e:
+        print(f"Error sending email: {e}")
+        raise HTTPException(status_code=500, detail="Failed to send feedback.")
+

@@ -109,6 +109,18 @@ async def publish_content(request: SaveRequest, db: AsyncSession = Depends(get_d
         published = pub_result.scalars().first()
         
         if published:
+            # If it's an image and the URL has changed, delete the old file
+            if item.content_type == 'image' and published.content_value != item.content_value:
+                old_url = published.content_value
+                if old_url and old_url.startswith("/static/uploads/"):
+                    filename = old_url.split("/")[-1]
+                    filepath = os.path.join("static", "uploads", filename)
+                    try:
+                        if os.path.exists(filepath):
+                            os.remove(filepath)
+                    except Exception as e:
+                        print(f"Failed to delete old image {filepath}: {e}")
+            
             published.content_value = item.content_value
         else:
             new_pub = WebsiteContent(
@@ -139,15 +151,29 @@ async def publish_content(request: SaveRequest, db: AsyncSession = Depends(get_d
 @router.post("/upload")
 async def upload_image(file: UploadFile = File(...), admin: AdminUser = Depends(get_current_admin)):
     """Upload an image and return its URL."""
+    ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".svg", ".gif"}
+    MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB
+    
+    if not file.filename:
+        raise HTTPException(status_code=400, detail="No file provided")
+        
+    import pathlib
+    ext = pathlib.Path(file.filename).suffix.lower()
+    
+    if ext not in ALLOWED_EXTENSIONS:
+        raise HTTPException(status_code=400, detail="File type not allowed. Only images (JPG, PNG, WEBP, SVG, GIF) are permitted.")
+
+    content = await file.read()
+    if len(content) > MAX_FILE_SIZE:
+        raise HTTPException(status_code=400, detail="File too large. Maximum size is 5MB.")
+
     upload_dir = os.path.join("static", "uploads")
     os.makedirs(upload_dir, exist_ok=True)
     
-    ext = file.filename.split(".")[-1] if "." in file.filename else "jpg"
-    filename = f"{uuid.uuid4().hex}.{ext}"
+    filename = f"{uuid.uuid4().hex}{ext}"
     filepath = os.path.join(upload_dir, filename)
     
     async with aiofiles.open(filepath, 'wb') as out_file:
-        content = await file.read()
         await out_file.write(content)
         
     return {"url": f"/static/uploads/{filename}"}
@@ -196,7 +222,7 @@ async def create_equipment_api(
 
 @router.delete("/equipment/{equipment_id}")
 async def delete_equipment_api(
-    equipment_id: int,
+    equipment_id: str,
     db: AsyncSession = Depends(get_db),
     admin: AdminUser = Depends(get_current_admin)
 ):
@@ -217,7 +243,7 @@ async def delete_equipment_api(
 
 @router.put("/equipment/{equipment_id}")
 async def update_equipment_api(
-    equipment_id: int,
+    equipment_id: str,
     data: EquipmentCreate,
     db: AsyncSession = Depends(get_db),
     admin: AdminUser = Depends(get_current_admin)
@@ -281,7 +307,7 @@ async def create_knowledge_api(
 
 @router.delete("/knowledge/{article_id}")
 async def delete_knowledge_api(
-    article_id: int,
+    article_id: str,
     db: AsyncSession = Depends(get_db),
     admin: AdminUser = Depends(get_current_admin)
 ):
