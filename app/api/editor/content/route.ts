@@ -42,6 +42,9 @@ export async function GET(request: Request) {
     return NextResponse.json(contentMap);
   } catch (error) {
     console.error('Error fetching content:', error);
-    return NextResponse.json({ detail: 'Internal server error' }, { status: 500 });
+    return NextResponse.json({ 
+      detail: 'Internal server error', 
+      error_message: error instanceof Error ? error.message : JSON.stringify(error) 
+    }, { status: 500 });
   }
 }
