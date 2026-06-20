@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 
@@ -40,3 +41,4 @@ export async function POST(req: Request) {
     return NextResponse.json({ detail: "Failed to send feedback." }, { status: 500 });
   }
 }
+
