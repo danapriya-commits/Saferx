@@ -23,7 +23,7 @@ export default function EquipmentPage() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
   const [deletingProductId, setDeletingProductId] = useState<string | null>(null)
   const [mounted, setMounted] = useState(false)
-  const { isEditing } = useContent()
+  const { isEditing, content, updateContent } = useContent()
 
   useEffect(() => {
     setMounted(true)
@@ -47,38 +47,18 @@ export default function EquipmentPage() {
     fetchEquipment()
   }, [])
 
-  const handleAddEquipment = async () => {
-    try {
-      const res = await fetch('/api/editor/equipment/new', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          title: "New Equipment",
-          short_description: "Click to edit.",
-          description: "",
-          category: "General",
-          image_url: ""
-        })
-      })
-      if (res.ok) {
-        fetchEquipment()
-      } else {
-        alert('Failed to add equipment')
-      }
-    } catch (e) {
-      console.error(e)
-    }
-  }
-
   // Filter products based on active category and search query
   const filteredProducts = useMemo(() => {
     return equipmentList.filter((product) => {
+      const isVisible = content['equipment']?.[`image_${product.id}_visible`] !== 'false'
+      if (!isEditing && !isVisible) return false
+
       const matchesCategory = activeCategory === 'All' || product.category === activeCategory
       const matchesSearch = (product.title || '').toLowerCase().includes(searchQuery.toLowerCase()) || 
                             (product.short_description || '').toLowerCase().includes(searchQuery.toLowerCase())
       return matchesCategory && matchesSearch
     })
-  }, [activeCategory, searchQuery, equipmentList])
+  }, [activeCategory, searchQuery, equipmentList, content, isEditing])
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -162,8 +142,10 @@ export default function EquipmentPage() {
                 </div>
               ) : filteredProducts.length > 0 ? (
                 <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-                  {filteredProducts.map(product => (
-                    <div key={product.id} className="relative group/edit">
+                  {filteredProducts.map(product => {
+                    const isVisible = content['equipment']?.[`image_${product.id}_visible`] !== 'false'
+                    return (
+                    <div key={product.id} className={`relative group/edit transition-all duration-300 ${!isVisible ? 'opacity-40 grayscale' : ''}`}>
                       <ProductCard 
                         product={{
                           id: product.id,
@@ -197,22 +179,39 @@ export default function EquipmentPage() {
                         }}
                       />
                       {isEditing && (
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            setDeletingProductId(product.id)
-                          }}
-                          className="absolute -top-3 -right-3 z-10 hidden group-hover/edit:flex h-8 w-8 items-center justify-center rounded-full bg-red-100 text-red-600 shadow-sm hover:bg-red-600 hover:text-white transition-colors"
-                          title="Delete Equipment"
-                        >
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
-                        </button>
+                        <div className="absolute -top-3 -right-3 z-10 hidden group-hover/edit:flex gap-2">
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              updateContent('equipment', `image_${product.id}_visible`, isVisible ? 'false' : 'true', 'visibility');
+                            }}
+                            className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-800 text-white shadow-sm hover:bg-slate-700 hover:scale-110 transition-all"
+                            title={isVisible ? "Hide Equipment" : "Show Equipment"}
+                          >
+                            {isVisible ? (
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                            ) : (
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/></svg>
+                            )}
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              setDeletingProductId(product.id)
+                            }}
+                            className="flex h-8 w-8 items-center justify-center rounded-full bg-red-100 text-red-600 shadow-sm hover:bg-red-600 hover:text-white hover:scale-110 transition-all"
+                            title="Delete Equipment"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+                          </button>
+                        </div>
                       )}
                     </div>
-                  ))}
+                  )})}
                   {isEditing && (
                     <button 
-                      onClick={handleAddEquipment}
+                      onClick={() => setIsAddModalOpen(true)}
                       className="group flex flex-col items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-border bg-secondary/10 hover:bg-secondary/30 transition-all duration-300 hover:-translate-y-1 min-h-[350px] cursor-pointer"
                     >
                       <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors mb-4">
@@ -224,17 +223,37 @@ export default function EquipmentPage() {
                 </div>
               ) : (
                 <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border py-20 text-center bg-card shadow-sm">
-                  <Search className="h-10 w-10 text-muted-foreground mb-4" />
-                  <h3 className="text-lg font-semibold text-foreground">No equipment found</h3>
-                  <p className="text-muted-foreground mt-2 max-w-sm">
-                    We couldn't find any equipment matching your search criteria. Try adjusting your filters or search terms.
-                  </p>
-                  <button 
-                    onClick={() => { setSearchQuery(''); setActiveCategory('All'); }}
-                    className="mt-6 font-medium text-primary hover:underline"
-                  >
-                    Clear all filters
-                  </button>
+                  {isEditing ? (
+                    <>
+                      <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary mb-4">
+                        <Plus className="h-8 w-8" />
+                      </div>
+                      <h3 className="text-lg font-semibold text-foreground">Ready to add equipment?</h3>
+                      <p className="text-muted-foreground mt-2 max-w-sm mb-6">
+                        Click the button below to add your first piece of equipment to this category.
+                      </p>
+                      <button 
+                        onClick={() => setIsAddModalOpen(true)}
+                        className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary/90 transition-colors"
+                      >
+                        <Plus className="h-4 w-4" /> Add New Equipment
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <Search className="h-10 w-10 text-muted-foreground mb-4" />
+                      <h3 className="text-lg font-semibold text-foreground">No equipment found</h3>
+                      <p className="text-muted-foreground mt-2 max-w-sm">
+                        We couldn't find any equipment matching your search criteria. Try adjusting your filters or search terms.
+                      </p>
+                      <button 
+                        onClick={() => { setSearchQuery(''); setActiveCategory('All'); }}
+                        className="mt-6 font-medium text-primary hover:underline"
+                      >
+                        Clear all filters
+                      </button>
+                    </>
+                  )}
                 </div>
               )}
             </div>
@@ -392,7 +411,7 @@ export default function EquipmentPage() {
       )}
 
       {/* Render Edit Equipment Modal */}
-      {editingProduct && (
+      {mounted && editingProduct && createPortal(
         <EditEquipmentModal 
           product={editingProduct}
           onClose={() => setEditingProduct(null)}
@@ -400,7 +419,8 @@ export default function EquipmentPage() {
             setEditingProduct(null)
             fetchEquipment()
           }}
-        />
+        />,
+        document.body
       )}
 
       {mounted && deletingProductId && createPortal(
@@ -444,14 +464,15 @@ export default function EquipmentPage() {
       )}
 
       {/* Render Add Equipment Modal */}
-      {isAddModalOpen && (
+      {mounted && isAddModalOpen && createPortal(
         <AddEquipmentModal 
           onClose={() => setIsAddModalOpen(false)}
           onSuccess={() => {
             setIsAddModalOpen(false)
             fetchEquipment()
           }}
-        />
+        />,
+        document.body
       )}
     </div>
   )

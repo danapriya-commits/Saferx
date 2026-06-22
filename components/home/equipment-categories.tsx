@@ -2,12 +2,15 @@
 
 import Link from 'next/link'
 import { EditableImage } from '@/components/admin/EditableImage'
+import { useContent } from '@/components/admin/ContentProvider'
 import { ArrowRight } from 'lucide-react'
 import { SectionHeading } from '@/components/section'
 import { Reveal } from '@/components/reveal'
 import { EQUIPMENT_CATEGORIES } from '@/lib/site-data'
 
 export function EquipmentCategories() {
+  const { content, isEditing } = useContent()
+
   return (
     <section className="bg-secondary/40 py-14 sm:py-20">
       <div className="mx-auto max-w-[1536px] container-px">
@@ -26,8 +29,11 @@ export function EquipmentCategories() {
         </div>
 
         <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {EQUIPMENT_CATEGORIES.map((c, i) => (
-            <Reveal key={c.slug} delay={i * 0.06}>
+          {EQUIPMENT_CATEGORIES.map((c, i) => {
+            const isVisible = content['home_categories']?.[`image_${c.slug}_visible`] !== 'false'
+            if (!isEditing && !isVisible) return null
+            return (
+              <Reveal key={c.slug} delay={i * 0.06}>
               <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
                 <div className="relative aspect-[16/10] overflow-hidden">
                   <EditableImage
@@ -59,8 +65,9 @@ export function EquipmentCategories() {
                   </Link>
                 </div>
               </div>
-            </Reveal>
-          ))}
+              </Reveal>
+            )
+          })}
         </div>
       </div>
     </section>

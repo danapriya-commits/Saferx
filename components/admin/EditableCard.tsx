@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { useContent } from './ContentProvider'
 import { EditableCardModal, CardField } from './EditableCardModal'
-import { Trash2, AlertTriangle } from 'lucide-react'
+import { Trash2, AlertTriangle, Eye, EyeOff } from 'lucide-react'
 
 interface EditableCardProps {
   section: string
@@ -37,10 +37,12 @@ export function EditableCard({
   }, [])
 
   const isDeleted = content[section]?.[`${cardId}_deleted`] === "true"
+  const isVisible = content[section]?.[`${cardId}_visible`] !== 'false'
 
   if (isDeleted) return null
 
   if (!isEditing) {
+    if (!isVisible) return null;
     return <Component className={className} {...props}>{children}</Component>
   }
 
@@ -69,27 +71,46 @@ export function EditableCard({
     setShowConfirm(false)
   }
 
+  const toggleVisibility = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    updateContent(section, `${cardId}_visible`, isVisible ? 'false' : 'true', 'visibility')
+  }
+
   return (
     <>
       <Component
-        className={`relative group/editable cursor-pointer hover:outline hover:outline-2 hover:outline-blue-500 hover:outline-dashed outline-offset-4 focus:outline-blue-600 focus:bg-blue-50/10 focus:outline-solid transition-all ${className}`}
+        className={`relative group/editable cursor-pointer hover:outline hover:outline-2 hover:outline-blue-500 hover:outline-dashed outline-offset-4 focus:outline-blue-600 focus:bg-blue-50/10 focus:outline-solid transition-all ${!isVisible ? 'opacity-40 grayscale' : ''} ${className}`}
         onClick={handleClick}
         title="Click to edit card"
         {...props}
       >
         {children}
 
-        {allowDelete && (
-          <div className="absolute top-2 right-2 z-20 opacity-0 group-hover/editable:opacity-100 transition-opacity pointer-events-auto">
-            <button
+        <div className="absolute top-2 right-2 z-20 flex flex-col gap-2 opacity-0 group-hover/editable:opacity-100 transition-opacity pointer-events-auto">
+          {/* Eye Icon Toggle */}
+          <div
+            role="button"
+            tabIndex={0}
+            onClick={toggleVisibility}
+            className="flex items-center justify-center rounded-full bg-slate-800 p-2 text-white shadow-sm hover:bg-slate-700 transition-colors"
+            title={isVisible ? "Hide card on live website" : "Show card on live website"}
+          >
+            {isVisible ? <Eye size={16} /> : <EyeOff size={16} />}
+          </div>
+
+          {allowDelete && (
+            <div
+              role="button"
+              tabIndex={0}
               onClick={handleDelete}
-              className="flex items-center justify-center rounded-full bg-red-100 p-2 text-red-600 shadow-sm hover:bg-red-600 hover:text-white transition-colors"
+              className="flex items-center justify-center rounded-full bg-red-100 p-2 text-red-600 shadow-sm hover:bg-red-600 hover:text-white transition-colors cursor-pointer"
               title="Delete Card"
             >
               <Trash2 className="h-4 w-4" />
-            </button>
-          </div>
-        )}
+            </div>
+          )}
+        </div>
       </Component>
 
       {isModalOpen && (

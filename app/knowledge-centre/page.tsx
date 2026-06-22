@@ -1,10 +1,14 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { Suspense } from 'react'
+
+import { useState, useMemo, useRef, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { PageHero } from '@/components/section'
 import { ARTICLES, CATEGORIES } from '@/lib/knowledge-data'
 import Link from 'next/link'
-import { ArrowRight, Clock, CalendarDays, Search, Tag, FileText, Plus } from 'lucide-react'
+import { useSearchParams, useRouter, usePathname } from 'next/navigation'
+import { ArrowRight, Clock, CalendarDays, Search, Tag, FileText, Plus, X, Upload, Loader2 } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
@@ -15,9 +19,37 @@ import { useContent } from '@/components/admin/ContentProvider'
 import { ArticleModal } from '@/components/article-modal'
 
 export default function KnowledgeCentrePage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <KnowledgeCentreContent />
+    </Suspense>
+  )
+}
+
+function KnowledgeCentreContent() {
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const articleParam = searchParams.get('article')
   const [searchQuery, setSearchQuery] = useState('')
   const [activeCategory, setActiveCategory] = useState<string | null>(null)
   const [selectedArticle, setSelectedArticle] = useState<any | null>(null)
+  const [showAddModal, setShowAddModal] = useState(false)
+
+  // Add Article form state
+  const [newTitle, setNewTitle] = useState('')
+  const [newExcerpt, setNewExcerpt] = useState('')
+  const [newCategory, setNewCategory] = useState('')
+  const [newContent, setNewContent] = useState('')
+  const [newImageUrl, setNewImageUrl] = useState('')
+  const [isUploading, setIsUploading] = useState(false)
+  const [isCreating, setIsCreating] = useState(false)
+  const [mounted, setMounted] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   // Featured Articles: Procurement Guide, Technology Planning, Lifecycle Management, TCO
   const featuredSlugs = [
@@ -32,18 +64,21 @@ export default function KnowledgeCentrePage() {
 
   // Read custom article slugs from CMS
   const customSlugsStr = content['knowledge']?.['custom_article_slugs'] || ''
-  const customSlugs = customSlugsStr.split(',').filter(Boolean)
-
-  const customArticles = customSlugs.map(slug => ({
-    slug: `custom_${slug}`,
-    title: content['knowledge']?.[`custom_${slug}_title`] || 'New Custom Article',
-    excerpt: content['knowledge']?.[`custom_${slug}_excerpt`] || 'Click to edit this custom article description.',
-    date: new Date().toISOString(),
-    category: 'Custom',
-    readTime: '5 min read',
-    image: '',
-    isCustom: true
-  }))
+  
+  const customArticles = useMemo(() => {
+    const slugs = customSlugsStr.split(',').filter(Boolean)
+    return slugs.map(slug => ({
+      slug: `custom_${slug}`,
+      title: content['knowledge']?.[`custom_${slug}_title`] || 'New Custom Article',
+      excerpt: content['knowledge']?.[`custom_${slug}_excerpt`] || 'Click to edit this custom article description.',
+      date: content['knowledge']?.[`custom_${slug}_date`] || new Date().toISOString(),
+      category: content['knowledge']?.[`custom_${slug}_category`] || 'Custom',
+      readTime: '5 min read',
+      image: content['knowledge']?.[`custom_${slug}_image`] || '',
+      content: content['knowledge']?.[`custom_${slug}_content`] || '',
+      isCustom: true
+    }))
+  }, [customSlugsStr, content])
 
   // Filtered articles (combine static ARTICLES and customArticles)
   const filteredArticles = useMemo(() => {
@@ -59,10 +94,83 @@ export default function KnowledgeCentrePage() {
     })
   }, [searchQuery, activeCategory, ARTICLES, customArticles, content, isEditing])
 
-  const handleAddCustomArticle = () => {
+  useEffect(() => {
+    if (articleParam && mounted && filteredArticles.length > 0) {
+      const found = filteredArticles.find(a => a.slug === articleParam)
+      if (found) {
+        setSelectedArticle(found)
+      }
+    }
+  }, [articleParam, mounted, filteredArticles])
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    setIsUploading(true)
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+
+      const res = await fetch('/api/editor/upload', {
+        method: 'POST',
+        body: formData,
+      })
+
+      if (res.ok) {
+        const data = await res.json()
+        setNewImageUrl(data.url)
+      } else {
+        alert('Failed to upload image. Please try again.')
+      }
+    } catch (err) {
+      console.error('Upload error:', err)
+      alert('An error occurred while uploading the image.')
+    } finally {
+      setIsUploading(false)
+    }
+  }
+
+  const handleCreateArticle = () => {
+    if (!newTitle.trim()) {
+      alert('Please enter a title for the article.')
+      return
+    }
+
+    setIsCreating(true)
+
     const newSlug = Date.now().toString()
+    const customSlugs = customSlugsStr.split(',').filter(Boolean)
     const newSlugsList = [...customSlugs, newSlug].join(',')
+
+    // Save all fields to the content store
     updateContent('knowledge', 'custom_article_slugs', newSlugsList, 'text')
+    updateContent('knowledge', `custom_${newSlug}_title`, newTitle.trim(), 'text')
+    updateContent('knowledge', `custom_${newSlug}_excerpt`, newExcerpt.trim(), 'text')
+    updateContent('knowledge', `custom_${newSlug}_category`, newCategory || 'Custom', 'text')
+    updateContent('knowledge', `custom_${newSlug}_content`, newContent.trim(), 'text')
+    updateContent('knowledge', `custom_${newSlug}_date`, new Date().toISOString(), 'text')
+    if (newImageUrl) {
+      updateContent('knowledge', `custom_${newSlug}_image`, newImageUrl, 'image')
+    }
+
+    // Reset form
+    setNewTitle('')
+    setNewExcerpt('')
+    setNewCategory('')
+    setNewContent('')
+    setNewImageUrl('')
+    setIsCreating(false)
+    setShowAddModal(false)
+  }
+
+  const resetAndCloseModal = () => {
+    setNewTitle('')
+    setNewExcerpt('')
+    setNewCategory('')
+    setNewContent('')
+    setNewImageUrl('')
+    setShowAddModal(false)
   }
 
   return (
@@ -133,7 +241,6 @@ export default function KnowledgeCentrePage() {
                       key={article.slug}
                       section="knowledge"
                       cardId={cardId}
-                      as="button"
                       onClick={() => setSelectedArticle(article)}
                       allowDelete={true}
                       fields={[
@@ -203,7 +310,10 @@ export default function KnowledgeCentrePage() {
             ) : (
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 <AnimatePresence>
-                  {filteredArticles.map((article, i) => (
+                  {filteredArticles.map((article, i) => {
+                    const title = content['knowledge']?.[`${article.slug}_title`] || article.title
+                    const excerpt = content['knowledge']?.[`${article.slug}_excerpt`] || article.excerpt
+                    return (
                     <motion.div
                       layout
                       initial={{ opacity: 0, scale: 0.9 }}
@@ -215,7 +325,6 @@ export default function KnowledgeCentrePage() {
                       <EditableCard
                         section="knowledge"
                         cardId={article.slug}
-                        as="button"
                         onClick={() => setSelectedArticle(article)}
                         allowDelete={true}
                         fields={[
@@ -242,10 +351,10 @@ export default function KnowledgeCentrePage() {
                         </div>
                         <div className="flex flex-1 flex-col p-5">
                           <h3 className="font-heading text-lg font-bold text-foreground mb-2 group-hover:text-primary transition-colors line-clamp-2">
-                            {article.title}
+                            {title}
                           </h3>
                           <p className="text-muted-foreground text-sm flex-1 mb-4 line-clamp-3">
-                            {article.excerpt}
+                            {excerpt}
                           </p>
                           <div className="mt-auto flex flex-wrap items-center justify-between gap-2 pt-4 border-t border-border/50">
                             <div className="flex items-center gap-3 text-xs font-medium text-muted-foreground">
@@ -258,7 +367,7 @@ export default function KnowledgeCentrePage() {
                         </div>
                       </EditableCard>
                     </motion.div>
-                  ))}
+                  )})}
 
                   {/* Add New Card Button (Admins Only) */}
                   {isEditing && !searchQuery && !activeCategory && (
@@ -271,7 +380,7 @@ export default function KnowledgeCentrePage() {
                       className="h-full"
                     >
                       <button
-                        onClick={handleAddCustomArticle}
+                        onClick={() => setShowAddModal(true)}
                         className="group flex flex-col items-center justify-center h-full min-h-[360px] w-full overflow-hidden rounded-2xl border-2 border-dashed border-primary/30 bg-primary/5 hover:bg-primary/10 transition-colors"
                       >
                         <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
@@ -317,8 +426,176 @@ export default function KnowledgeCentrePage() {
       {selectedArticle && (
         <ArticleModal 
           article={selectedArticle} 
-          onClose={() => setSelectedArticle(null)} 
+          onClose={() => {
+            setSelectedArticle(null)
+            if (articleParam) {
+              const newParams = new URLSearchParams(searchParams.toString())
+              newParams.delete('article')
+              router.replace(`${pathname}${newParams.toString() ? `?${newParams.toString()}` : ''}`, { scroll: false })
+            }
+          }} 
         />
+      )}
+
+      {/* Add New Article Modal */}
+      {mounted && showAddModal && createPortal(
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
+          <div 
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            onClick={resetAndCloseModal}
+          />
+          <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl bg-background shadow-2xl border border-border animate-in fade-in zoom-in-95 duration-200">
+            {/* Modal Header */}
+            <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border bg-background/95 backdrop-blur-sm px-6 py-4 rounded-t-2xl">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                  <Plus className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-bold text-foreground">Add New Article</h2>
+                  <p className="text-sm text-muted-foreground">Fill in the details to create a new card</p>
+                </div>
+              </div>
+              <button
+                onClick={resetAndCloseModal}
+                className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-6 space-y-6">
+              {/* Image Upload */}
+              <div>
+                <label className="block text-sm font-semibold text-foreground mb-2">Cover Image</label>
+                <div className="relative">
+                  {newImageUrl ? (
+                    <div className="relative h-48 w-full rounded-xl overflow-hidden border border-border bg-secondary">
+                      <img src={newImageUrl} alt="Preview" className="h-full w-full object-cover" />
+                      <button
+                        onClick={() => { setNewImageUrl(''); if (fileInputRef.current) fileInputRef.current.value = '' }}
+                        className="absolute top-2 right-2 h-8 w-8 flex items-center justify-center rounded-full bg-background/90 text-foreground shadow-sm hover:bg-muted transition-colors"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={isUploading}
+                      className="flex flex-col items-center justify-center w-full h-48 rounded-xl border-2 border-dashed border-border bg-secondary/30 hover:bg-secondary/50 transition-colors cursor-pointer"
+                    >
+                      {isUploading ? (
+                        <>
+                          <Loader2 className="h-8 w-8 text-primary animate-spin mb-2" />
+                          <span className="text-sm text-muted-foreground">Uploading...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Upload className="h-8 w-8 text-muted-foreground mb-2" />
+                          <span className="text-sm font-medium text-foreground">Click to upload image</span>
+                          <span className="text-xs text-muted-foreground mt-1">JPG, PNG, WebP (max 5MB)</span>
+                        </>
+                      )}
+                    </button>
+                  )}
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp,image/gif"
+                    className="hidden"
+                    onChange={handleImageUpload}
+                  />
+                </div>
+              </div>
+
+              {/* Title */}
+              <div>
+                <label className="block text-sm font-semibold text-foreground mb-2">Title <span className="text-destructive">*</span></label>
+                <Input
+                  type="text"
+                  placeholder="Enter article title..."
+                  value={newTitle}
+                  onChange={(e) => setNewTitle(e.target.value)}
+                  className="h-12 text-base"
+                />
+              </div>
+
+              {/* Category */}
+              <div>
+                <label className="block text-sm font-semibold text-foreground mb-2">Category</label>
+                <select
+                  value={newCategory}
+                  onChange={(e) => setNewCategory(e.target.value)}
+                  className="flex h-12 w-full rounded-xl border border-input bg-background px-4 py-2 text-base ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                >
+                  <option value="">Select a category...</option>
+                  {CATEGORIES.map((cat) => (
+                    <option key={cat} value={cat}>{cat}</option>
+                  ))}
+                  <option value="Custom">Custom</option>
+                </select>
+              </div>
+
+              {/* Excerpt / Short Description */}
+              <div>
+                <label className="block text-sm font-semibold text-foreground mb-2">Short Description</label>
+                <textarea
+                  placeholder="Brief description that appears on the card..."
+                  value={newExcerpt}
+                  onChange={(e) => setNewExcerpt(e.target.value)}
+                  rows={3}
+                  className="flex w-full rounded-xl border border-input bg-background px-4 py-3 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 resize-none"
+                />
+              </div>
+
+              {/* Full Content */}
+              <div>
+                <label className="block text-sm font-semibold text-foreground mb-2">Full Content</label>
+                <textarea
+                  placeholder="Write the full article content here. Use ### for headings and * for bullet points..."
+                  value={newContent}
+                  onChange={(e) => setNewContent(e.target.value)}
+                  rows={8}
+                  className="flex w-full rounded-xl border border-input bg-background px-4 py-3 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 resize-none"
+                />
+                <p className="text-xs text-muted-foreground mt-1.5">
+                  Tip: Use <code className="bg-muted px-1 py-0.5 rounded text-xs">### Heading</code> for section titles and <code className="bg-muted px-1 py-0.5 rounded text-xs">* Item</code> for bullet points.
+                </p>
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="sticky bottom-0 flex items-center justify-end gap-3 border-t border-border bg-background/95 backdrop-blur-sm px-6 py-4 rounded-b-2xl">
+              <Button
+                variant="outline"
+                onClick={resetAndCloseModal}
+                className="px-6"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleCreateArticle}
+                disabled={isCreating || !newTitle.trim()}
+                className="px-6 gap-2"
+              >
+                {isCreating ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Creating...
+                  </>
+                ) : (
+                  <>
+                    <Plus className="h-4 w-4" />
+                    Create Article
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
+        </div>,
+        document.body
       )}
     </div>
   )

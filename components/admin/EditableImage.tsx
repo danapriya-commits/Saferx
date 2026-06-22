@@ -10,9 +10,10 @@ interface EditableImageProps extends Omit<ImageProps, 'src'> {
   fieldKey: string
   defaultSrc: string
   asImg?: boolean
+  hideToggle?: boolean
 }
 
-export function EditableImage({ section, fieldKey, defaultSrc, className, asImg, ...props }: EditableImageProps) {
+export function EditableImage({ section, fieldKey, defaultSrc, className, asImg, hideToggle, ...props }: EditableImageProps) {
   const { content, isEditing, updateContent } = useContent()
   const [isUploading, setIsUploading] = useState(false)
   const inputContainerRef = React.useRef<HTMLDivElement>(null)
@@ -37,7 +38,7 @@ export function EditableImage({ section, fieldKey, defaultSrc, className, asImg,
     if (asImg) {
       return <img src={currentSrc} className={className} {...(props as any)} />
     }
-    return <Image src={currentSrc} className={className} {...props} />
+    return <Image src={currentSrc} className={className} {...props} priority={props.priority || false} loading={props.priority ? "eager" : undefined} />
   }
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -77,6 +78,20 @@ export function EditableImage({ section, fieldKey, defaultSrc, className, asImg,
 
   const overlay = (
     <div className="absolute inset-0 z-10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/30 backdrop-blur-sm pointer-events-none">
+      
+      {/* Eye Icon Toggle - Moved to top right */}
+      {!hideToggle && (
+        <button 
+          type="button"
+          onClick={toggleVisibility}
+          onPointerDown={(e) => { e.stopPropagation(); toggleVisibility(e as any); }}
+          className="absolute top-3 right-3 pointer-events-auto p-2 bg-slate-800/80 hover:bg-slate-700 text-white rounded-full shadow-lg transition-all z-50 cursor-pointer flex items-center justify-center hover:scale-110"
+          title={isVisible ? "Hide on live website" : "Show on live website"}
+        >
+          {isVisible ? <Eye size={18} /> : <EyeOff size={18} />}
+        </button>
+      )}
+
       <div ref={inputContainerRef} className="relative pointer-events-auto flex gap-2">
         <div className="relative">
           <div className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-full text-sm font-medium shadow-lg flex items-center gap-2 transition-colors">
@@ -97,15 +112,6 @@ export function EditableImage({ section, fieldKey, defaultSrc, className, asImg,
             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20"
           />
         </div>
-        
-        {/* Eye Icon Toggle */}
-        <button 
-          onClick={toggleVisibility}
-          className="p-2 bg-slate-800 hover:bg-slate-700 text-white rounded-full shadow-lg transition-colors z-20"
-          title={isVisible ? "Hide on live website" : "Show on live website"}
-        >
-          {isVisible ? <Eye size={18} /> : <EyeOff size={18} />}
-        </button>
       </div>
     </div>
   )
@@ -125,7 +131,7 @@ export function EditableImage({ section, fieldKey, defaultSrc, className, asImg,
 
   return (
     <div className={`group overflow-hidden ${isFill ? 'absolute inset-0' : 'relative inline-block'} ${className || ''}`}>
-      <Image src={currentSrc} className={imageClasses} {...props} />
+      <Image src={currentSrc} className={imageClasses} {...props} priority={props.priority || false} loading={props.priority ? "eager" : undefined} />
       {overlay}
     </div>
   )

@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { ArrowLeft, CalendarDays, Clock, User, CheckCircle2, ChevronRight } from 'lucide-react'
 import React from 'react'
 import { EditableImage } from '@/components/admin/EditableImage'
+import { supabase } from '@/lib/supabase'
 import { buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
@@ -85,7 +86,37 @@ function renderContent(content: string) {
 
 export default async function ArticleDetail({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const article = ARTICLES.find((a) => a.slug === slug)
+  
+  let article = null;
+  
+  try {
+    const { data, error } = await supabase
+      .from('knowledge_centre')
+      .select('*')
+      .eq('slug', slug)
+      .single();
+      
+    if (data && !error) {
+      article = {
+        title: data.title,
+        slug: data.slug,
+        category: data.category || 'Uncategorized',
+        date: data.published_at || data.created_at,
+        readTime: data.read_time || '5 min',
+        author: data.author || 'Saferx Expert',
+        image: data.image_url || '/images/project-hospital.png',
+        excerpt: data.excerpt,
+        content: data.content,
+        keyTakeaways: data.key_takeaways || [],
+      };
+    }
+  } catch (err) {
+    console.error("Error fetching article from Supabase:", err);
+  }
+
+  if (!article) {
+    article = ARTICLES.find((a) => a.slug === slug) as any;
+  }
 
   if (!article) {
     notFound()
@@ -153,7 +184,7 @@ export default async function ArticleDetail({ params }: { params: Promise<{ slug
                 Key Takeaways
               </h3>
               <ul className="space-y-3">
-                {article.keyTakeaways.map((takeaway, idx) => (
+                {article.keyTakeaways.map((takeaway: string, idx: number) => (
                   <li key={idx} className="flex gap-3 text-foreground/80 leading-relaxed">
                     <span className="h-2 w-2 rounded-full bg-primary shrink-0 mt-2" />
                     {takeaway}

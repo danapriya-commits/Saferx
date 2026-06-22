@@ -5,15 +5,21 @@ import Link from 'next/link'
 import { MapPin } from 'lucide-react'
 import { PROJECTS, ProjectData } from '@/lib/projects-data'
 import { EditableImage } from '@/components/admin/EditableImage'
+import { useContent } from '@/components/admin/ContentProvider'
 import { ProjectModal } from '@/components/project-modal'
 
 export function FeaturedProjectsGrid() {
   const [selectedProject, setSelectedProject] = useState<ProjectData | null>(null)
+  const { content, isEditing } = useContent()
 
   return (
     <>
       <div className="grid gap-8 lg:grid-cols-3">
-        {PROJECTS.map((project) => (
+        {PROJECTS.map((project) => {
+          const isVisible = content['projects']?.[`featured_img_${project.slug}_visible`] !== 'false'
+          if (!isEditing && !isVisible) return null
+          
+          return (
           <div key={project.slug} className="group flex flex-col overflow-hidden rounded-2xl bg-card shadow-sm border border-border hover:shadow-lg transition-all">
             <div className="relative aspect-[4/3] overflow-hidden bg-secondary/30">
               <EditableImage
@@ -65,7 +71,8 @@ export function FeaturedProjectsGrid() {
               </button>
             </div>
           </div>
-        ))}
+          )
+        })}
       </div>
 
       {selectedProject && (

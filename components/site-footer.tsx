@@ -143,11 +143,17 @@ export function SiteFooter() {
           </div>
         </div>
 
-        <div className="mt-14 flex flex-col items-center justify-center border-t border-background/15 pt-8 text-xs text-background/55 text-center">
+        <div className="mt-14 flex flex-col items-center justify-center border-t border-background/15 pt-8 text-xs text-background/55 text-center gap-4">
           <p>
             &copy; {new Date().getFullYear()} {COMPANY.name}. All rights reserved.
           </p>
-
+          <div className="flex items-center gap-3">
+            <Link href="/privacy-policy" className="hover:text-background transition-colors">Privacy Policy</Link>
+            <span>&bull;</span>
+            <Link href="/terms-conditions" className="hover:text-background transition-colors">Terms & Conditions</Link>
+            <span>&bull;</span>
+            <Link href="/refund-policy" className="hover:text-background transition-colors">Refund Policy</Link>
+          </div>
         </div>
       </div>
     </footer>

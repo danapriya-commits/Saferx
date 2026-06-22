@@ -49,7 +49,7 @@ export function SiteHeader() {
           : 'bg-card/40 backdrop-blur-md',
       )}
     >
-      <div className="mx-auto flex h-24 w-full max-w-[1536px] items-center justify-between container-px py-4">
+      <div className="mx-auto flex h-24 w-full items-center justify-between container-px py-4">
         <Logo />
 
         <nav className="hidden items-center gap-1 xl:flex" aria-label="Primary">

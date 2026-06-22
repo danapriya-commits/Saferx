@@ -69,6 +69,7 @@ export default async function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
+      data-scroll-behavior="smooth"
       className={`${inter.variable} ${manrope.variable} ${geistMono.variable} bg-background`}
     >
       <body suppressHydrationWarning className="font-sans antialiased overflow-x-hidden">

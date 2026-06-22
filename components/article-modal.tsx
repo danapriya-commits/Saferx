@@ -11,7 +11,8 @@ interface ArticleModalProps {
   onClose: () => void
 }
 
-function renderContent(content: string) {
+function renderContent(content?: string) {
+  if (!content) return null;
   const paragraphs = content.trim().split('\n\n')
   
   return paragraphs.map((block, i) => {

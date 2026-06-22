@@ -7,6 +7,7 @@ import { PROJECTS } from '@/lib/projects-data'
 import { EditableText } from '@/components/admin/EditableText'
 import { EditableImage } from '@/components/admin/EditableImage'
 import { FeaturedProjectsGrid } from '@/components/featured-projects-grid'
+import { ProjectGalleryGrid } from '@/components/projects/project-gallery-grid'
 
 export const metadata = {
   title: 'Healthcare Projects & Success Stories | Saferx',
@@ -135,21 +136,7 @@ export default function ProjectsPage() {
             </p>
           </div>
           
-          <div className="columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6">
-            {GALLERY_IMAGES.map((src, i) => (
-              <div key={i} className="break-inside-avoid relative overflow-hidden rounded-2xl group border border-border shadow-sm" style={{ height: i % 2 === 0 ? '800px' : '500px' }}>
-                <EditableImage
-                  section="projects"
-                  fieldKey={`gallery_img_${i}`}
-                  defaultSrc={src}
-                  alt={`Project Installation ${i + 1}`}
-                  fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              </div>
-            ))}
-          </div>
+          <ProjectGalleryGrid images={GALLERY_IMAGES} />
         </div>
       </section>
 

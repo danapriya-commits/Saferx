@@ -71,13 +71,15 @@ export function EditableText({
       </Component>
       
       {/* Eye Icon Toggle */}
-      <button 
+      <span 
+        role="button"
+        tabIndex={0}
         onClick={toggleVisibility}
-        className="absolute -top-3 -right-3 z-50 p-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-all scale-90 hover:scale-100"
+        className="absolute -top-3 -right-3 z-50 p-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-all scale-90 hover:scale-100 cursor-pointer flex items-center justify-center"
         title={isVisible ? "Hide on live website" : "Show on live website"}
       >
         {isVisible ? <Eye size={16} /> : <EyeOff size={16} />}
-      </button>
+      </span>
     </span>
   )
 }

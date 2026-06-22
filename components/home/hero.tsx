@@ -22,7 +22,8 @@ export function Hero() {
         defaultSrc="/images/hero-icu.png"
         alt="Modern hospital ICU with advanced medical equipment"
         fill
-        priority
+        priority={true}
+        loading="eager"
         sizes="100vw"
         className="object-cover"
       />

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, useInView } from 'motion/react'
 import { EditableText } from '@/components/admin/EditableText'
+import { useContent } from '@/components/admin/ContentProvider'
 
 const STATS = [
   { value: 50, suffix: '+', label: 'Healthcare Clients' },
@@ -10,7 +11,7 @@ const STATS = [
   { value: 24, suffix: '/7', label: 'Support' },
 ]
 
-function Counter({ to, suffix }: { to: number; suffix: string }) {
+function Counter({ to, suffix, prefix = '' }: { to: number; suffix: string; prefix?: string }) {
   const ref = useRef<HTMLSpanElement>(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
   const [value, setValue] = useState(0)
@@ -32,10 +33,32 @@ function Counter({ to, suffix }: { to: number; suffix: string }) {
 
   return (
     <span ref={ref}>
-      {value}
-      {suffix}
+      {prefix}{value}{suffix}
     </span>
   )
+}
+
+function AnimatedStat({ section, fieldKey, defaultValue, defaultSuffix }: { section: string, fieldKey: string, defaultValue: number, defaultSuffix: string }) {
+  const { content, isEditing } = useContent()
+  const valString = content[section]?.[fieldKey] || `${defaultValue}${defaultSuffix}`
+  
+  if (isEditing) {
+    return <EditableText section={section} fieldKey={fieldKey}>{valString}</EditableText>
+  }
+  
+  const numMatch = valString.match(/\d+/)
+  let to = 0
+  let suffix = valString
+  let prefix = ''
+  
+  if (numMatch) {
+    to = parseInt(numMatch[0])
+    const numIdx = valString.indexOf(numMatch[0])
+    prefix = valString.substring(0, numIdx)
+    suffix = valString.substring(numIdx + numMatch[0].length)
+  }
+
+  return <Counter to={to} suffix={suffix} prefix={prefix} />
 }
 
 export function Stats() {
@@ -53,7 +76,7 @@ export function Stats() {
               className="bg-card px-6 py-8 text-center"
             >
               <p className="font-heading text-4xl font-extrabold text-primary sm:text-5xl">
-                <Counter to={s.value} suffix={s.suffix} />
+                <AnimatedStat section="stats" fieldKey={`value_${i}`} defaultValue={s.value} defaultSuffix={s.suffix} />
               </p>
               <p className="mt-2 text-sm font-medium text-muted-foreground">
                 <EditableText section="stats" fieldKey={`label_${i}`}>
