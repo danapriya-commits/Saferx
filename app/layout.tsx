@@ -1,3 +1,4 @@
+export const revalidate = 0;
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata } from 'next'
 import { Inter, Manrope, Geist_Mono } from 'next/font/google'
@@ -37,24 +38,29 @@ export const metadata: Metadata = {
 }
 
 import { ContentProvider } from '@/components/admin/ContentProvider'
+import { supabase } from '@/lib/supabase'
 
 export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  // Fetch published content safely on server-side
-  let initialContent = {}
+  let initialContent: Record<string, Record<string, string>> = {}
   try {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000';
-    const res = await fetch(`${apiUrl}/api/editor/content?status=published`, { 
-      next: { revalidate: 60 },
-    })
-    if (res.ok) {
-      initialContent = await res.json()
+    const { data: publishedItems, error } = await supabase
+      .from('website_content')
+      .select('*')
+      .eq('page', 'home')
+      .eq('status', 'published');
+
+    if (!error && publishedItems) {
+      publishedItems.forEach(item => {
+        if (!initialContent[item.section]) initialContent[item.section] = {};
+        initialContent[item.section][item.field_key] = item.content_value;
+      });
     }
   } catch (err) {
-    // Silently continue — the site works fine with defaults when the API is unavailable
+    // Silently continue
   }
 
   return (

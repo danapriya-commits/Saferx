@@ -1,5 +1,6 @@
 export const dynamic = 'force-dynamic';
 import { NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { supabase } from '@/lib/supabase';
 
 interface ContentItem {
@@ -54,6 +55,9 @@ export async function POST(req: Request) {
         .eq('field_key', item.field_key)
         .eq('status', 'draft');
     }
+
+    // Revalidate the entire site so the published changes appear immediately
+    revalidatePath('/', 'layout');
 
     return NextResponse.json({ status: "success", message: `${items.length} items published.` });
   } catch (error) {
