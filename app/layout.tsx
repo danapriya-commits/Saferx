@@ -39,12 +39,14 @@ export const metadata: Metadata = {
 
 import { ContentProvider } from '@/components/admin/ContentProvider'
 import { supabase } from '@/lib/supabase'
+import { headers } from 'next/headers'
 
 export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  headers(); // Force dynamic rendering on every request
   let initialContent: Record<string, Record<string, string>> = {}
   try {
     const { data: publishedItems, error } = await supabase
