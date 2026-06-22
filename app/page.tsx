@@ -1,4 +1,3 @@
-export const dynamic = 'force-dynamic';
 import { Hero } from '@/components/home/hero'
 import { Stats } from '@/components/home/stats'
 import { FeaturedSolutions } from '@/components/home/featured-solutions'
@@ -8,6 +7,8 @@ import { Projects } from '@/components/home/projects'
 import { Testimonials } from '@/components/home/testimonials'
 import { BlogPreview } from '@/components/home/blog-preview'
 import { CTA } from '@/components/home/cta'
+
+export const dynamic = 'force-dynamic';
 
 export default function HomePage() {
   return (
