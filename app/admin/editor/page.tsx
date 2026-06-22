@@ -70,7 +70,6 @@ export default function VisualEditorPage() {
   }
 
   const handlePublish = async () => {
-    if (pendingCount === 0) return
     setShowPublishConfirm(true)
   }
 
@@ -180,7 +179,7 @@ export default function VisualEditorPage() {
             
             <button 
               onClick={handlePublish}
-              disabled={isPublishing || pendingCount === 0}
+              disabled={isPublishing}
               className="flex-1 lg:flex-none flex items-center justify-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-white bg-green-600 border border-transparent rounded-lg hover:bg-green-700 transition-colors focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isPublishing ? <Loader2 className="h-4 w-4 animate-spin shrink-0" /> : <Send className="h-4 w-4 shrink-0" />}

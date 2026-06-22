@@ -15,8 +15,8 @@ export async function POST(req: Request) {
   try {
     const { items } = await req.json() as { items: ContentItem[] };
 
+    // 1. Process items passed directly from the frontend
     for (const item of items) {
-      // 1. Check if published row exists
       const { data: published } = await supabase
         .from('website_content')
         .select('*')
@@ -27,8 +27,6 @@ export async function POST(req: Request) {
         .single();
 
       if (published) {
-        // If image and URL changed, ideally we'd delete the old image from Supabase Storage here.
-        // We will skip the deletion step for now to ensure data safety during migration.
         await supabase
           .from('website_content')
           .update({ content_value: item.content_value })
@@ -46,7 +44,6 @@ export async function POST(req: Request) {
           });
       }
 
-      // 2. Delete draft if it exists
       await supabase
         .from('website_content')
         .delete()
@@ -54,6 +51,48 @@ export async function POST(req: Request) {
         .eq('section', item.section)
         .eq('field_key', item.field_key)
         .eq('status', 'draft');
+    }
+
+    // 2. Fetch any remaining drafts from the database and publish them
+    const { data: existingDrafts } = await supabase
+      .from('website_content')
+      .select('*')
+      .eq('status', 'draft');
+
+    if (existingDrafts && existingDrafts.length > 0) {
+      for (const draft of existingDrafts) {
+        const { data: published } = await supabase
+          .from('website_content')
+          .select('*')
+          .eq('page', draft.page)
+          .eq('section', draft.section)
+          .eq('field_key', draft.field_key)
+          .eq('status', 'published')
+          .single();
+
+        if (published) {
+          await supabase
+            .from('website_content')
+            .update({ content_value: draft.content_value })
+            .eq('id', published.id);
+        } else {
+          await supabase
+            .from('website_content')
+            .insert({
+              page: draft.page,
+              section: draft.section,
+              field_key: draft.field_key,
+              content_type: draft.content_type || 'text',
+              content_value: draft.content_value,
+              status: 'published'
+            });
+        }
+
+        await supabase
+          .from('website_content')
+          .delete()
+          .eq('id', draft.id);
+      }
     }
 
     // Revalidate the entire site so the published changes appear immediately
