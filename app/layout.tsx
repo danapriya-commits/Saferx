@@ -46,7 +46,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  headers(); // Force dynamic rendering on every request
+  await headers(); // Force dynamic rendering on every request
   let initialContent: Record<string, Record<string, string>> = {}
   try {
     const { data: publishedItems, error } = await supabase
