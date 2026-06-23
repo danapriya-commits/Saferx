@@ -13,7 +13,7 @@ interface EditableImageProps extends Omit<ImageProps, 'src'> {
   hideToggle?: boolean
 }
 
-export function EditableImage({ section, fieldKey, defaultSrc, className, asImg, hideToggle, ...props }: EditableImageProps) {
+export function EditableImage({ section, fieldKey, defaultSrc, className, asImg, hideToggle, priority, loading, ...props }: EditableImageProps) {
   const { content, isEditing, updateContent } = useContent()
   const [isUploading, setIsUploading] = useState(false)
   const inputContainerRef = React.useRef<HTMLDivElement>(null)
@@ -36,9 +36,9 @@ export function EditableImage({ section, fieldKey, defaultSrc, className, asImg,
     if (!isVisible) return null;
     
     if (asImg) {
-      return <img src={currentSrc} className={className} {...(props as any)} />
+      return <img src={currentSrc} className={className} loading={priority ? "eager" : loading} {...(props as any)} />
     }
-    return <Image src={currentSrc} className={className} {...props} priority={props.priority || false} loading={props.priority ? "eager" : undefined} />
+    return <Image src={currentSrc} className={className} priority={priority} loading={priority ? "eager" : loading} fetchPriority={priority ? "high" : undefined} {...props} />
   }
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -131,7 +131,7 @@ export function EditableImage({ section, fieldKey, defaultSrc, className, asImg,
 
   return (
     <div className={`group overflow-hidden ${isFill ? 'absolute inset-0' : 'relative inline-block'} ${className || ''}`}>
-      <Image src={currentSrc} className={imageClasses} {...props} priority={props.priority || false} loading={props.priority ? "eager" : undefined} />
+      <Image src={currentSrc} className={imageClasses} priority={priority} loading={priority ? "eager" : loading} fetchPriority={priority ? "high" : undefined} {...props} />
       {overlay}
     </div>
   )

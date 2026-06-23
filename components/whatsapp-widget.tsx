@@ -54,7 +54,7 @@ export function WhatsAppWidget() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     const message = encodeURIComponent(
-      `Hi Saferx team! 👋\n\nTopic: ${topic}\nName: ${name}\nPhone: ${phone}\nRequirement: ${requirement}`,
+      `Hi Saferx team!\n\nTopic: ${topic}\nName: ${name}\nPhone: ${phone}\nRequirement: ${requirement}`,
     )
     window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, '_blank')
     setStep('done')

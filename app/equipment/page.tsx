@@ -11,9 +11,19 @@ import { Search, ShieldCheck, Wrench, Settings2, Activity, Phone } from 'lucide-
 import Link from 'next/link'
 import { EditableText } from '@/components/admin/EditableText'
 import { useContent } from '@/components/admin/ContentProvider'
+import { useSearchParams, useRouter, usePathname } from 'next/navigation'
 import { Plus, AlertTriangle } from 'lucide-react'
+import { Suspense } from 'react'
 
 export default function EquipmentPage() {
+  return (
+    <Suspense fallback={<div>Loading equipment...</div>}>
+      <EquipmentPageContent />
+    </Suspense>
+  )
+}
+
+function EquipmentPageContent() {
   const [activeCategory, setActiveCategory] = useState<string | 'All'>('All')
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedProduct, setSelectedProduct] = useState<any | null>(null)
@@ -24,6 +34,10 @@ export default function EquipmentPage() {
   const [deletingProductId, setDeletingProductId] = useState<string | null>(null)
   const [mounted, setMounted] = useState(false)
   const { isEditing, content, updateContent } = useContent()
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const pathname = usePathname()
+  const productParam = searchParams.get('product')
 
   useEffect(() => {
     setMounted(true)
@@ -46,6 +60,26 @@ export default function EquipmentPage() {
   useEffect(() => {
     fetchEquipment()
   }, [])
+
+  useEffect(() => {
+    if (productParam && equipmentList.length > 0 && !selectedProduct) {
+      const found = equipmentList.find(p => p.id === productParam)
+      if (found) {
+        setSelectedProduct({
+          id: found.id,
+          name: found.title,
+          description: found.full_description || found.short_description,
+          department: found.category,
+          category: found.category,
+          image: found.image_url ? found.image_url : '/images/placeholder.jpg',
+          features: [],
+          technicalSpecs: found.specifications ? [found.specifications] : [],
+          benefits: [],
+          installationSupport: ''
+        })
+      }
+    }
+  }, [productParam, equipmentList])
 
   // Filter products based on active category and search query
   const filteredProducts = useMemo(() => {
@@ -405,7 +439,14 @@ export default function EquipmentPage() {
             benefits: [],
             installationSupport: ''
           }))}
-          onClose={() => setSelectedProduct(null)} 
+          onClose={() => {
+            setSelectedProduct(null)
+            if (productParam) {
+              const newParams = new URLSearchParams(searchParams.toString())
+              newParams.delete('product')
+              router.replace(`${pathname}${newParams.toString() ? `?${newParams.toString()}` : ''}`, { scroll: false })
+            }
+          }} 
           onSelectProduct={setSelectedProduct}
         />
       )}

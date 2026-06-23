@@ -23,7 +23,6 @@ export function Hero() {
         alt="Modern hospital ICU with advanced medical equipment"
         fill
         priority={true}
-        loading="eager"
         sizes="100vw"
         className="object-cover"
       />

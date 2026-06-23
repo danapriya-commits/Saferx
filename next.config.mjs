@@ -11,7 +11,7 @@ const nextConfig = {
     remotePatterns: [
       { protocol: 'http', hostname: '127.0.0.1', port: '8000' },
       { protocol: 'https', hostname: '**.saferxmedical.com' },
-      { protocol: 'https', hostname: 'fedhfwafuycwfvmntsnz.supabase.co' },
+      { protocol: 'https', hostname: 'fgnkzqnlxdtblhiwnahe.supabase.co' },
     ],
   },
   turbopack: {
