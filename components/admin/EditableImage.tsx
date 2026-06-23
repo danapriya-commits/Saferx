@@ -42,13 +42,47 @@ export function EditableImage({ section, fieldKey, defaultSrc, className, asImg,
   }
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
+    const originalFile = e.target.files?.[0]
+    if (!originalFile) return
 
     setIsUploading(true)
     try {
+      // Compress the image client-side to avoid Vercel 4.5MB payload limits
+      const fileToUpload = await new Promise<File>((resolve) => {
+        if (originalFile.type === 'image/svg+xml' || originalFile.type === 'image/gif' || originalFile.size < 1024 * 1024) {
+          return resolve(originalFile);
+        }
+        const img = document.createElement('img');
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let { width, height } = img;
+          const MAX_SIZE = 1920;
+          if (width > height && width > MAX_SIZE) {
+            height *= MAX_SIZE / width;
+            width = MAX_SIZE;
+          } else if (height > MAX_SIZE) {
+            width *= MAX_SIZE / height;
+            height = MAX_SIZE;
+          }
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          if (!ctx) return resolve(originalFile);
+          ctx.drawImage(img, 0, 0, width, height);
+          canvas.toBlob((blob) => {
+            if (blob) {
+              resolve(new File([blob], originalFile.name.replace(/\.[^/.]+$/, "") + ".webp", { type: 'image/webp' }));
+            } else {
+              resolve(originalFile);
+            }
+          }, 'image/webp', 0.85);
+        };
+        img.onerror = () => resolve(originalFile);
+        img.src = URL.createObjectURL(originalFile);
+      });
+
       const formData = new FormData()
-      formData.append('file', file)
+      formData.append('file', fileToUpload)
       
       const response = await fetch('/api/editor/upload', {
         method: 'POST',
