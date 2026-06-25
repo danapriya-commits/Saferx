@@ -25,6 +25,7 @@ export function EditableCard({
   className = '',
   as: Component = 'div',
   allowDelete = false,
+  onClick: originalOnClick,
   ...props
 }: EditableCardProps) {
   const { isEditing, content, updateContent } = useContent()
@@ -43,7 +44,7 @@ export function EditableCard({
 
   if (!isEditing) {
     if (!isVisible) return null;
-    return <Component className={className} {...props}>{children}</Component>
+    return <Component className={className} onClick={originalOnClick} {...props}>{children}</Component>
   }
 
   const handleClick = (e: React.MouseEvent) => {
