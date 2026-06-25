@@ -42,6 +42,7 @@ function KnowledgeCentreContent() {
   const [newCategory, setNewCategory] = useState('')
   const [newContent, setNewContent] = useState('')
   const [newImageUrl, setNewImageUrl] = useState('')
+  const [newDate, setNewDate] = useState(() => new Date().toISOString().split('T')[0])
   const [isUploading, setIsUploading] = useState(false)
   const [isCreating, setIsCreating] = useState(false)
   const [mounted, setMounted] = useState(false)
@@ -149,7 +150,7 @@ function KnowledgeCentreContent() {
     updateContent('knowledge', `custom_${newSlug}_excerpt`, newExcerpt.trim(), 'text')
     updateContent('knowledge', `custom_${newSlug}_category`, newCategory || 'Custom', 'text')
     updateContent('knowledge', `custom_${newSlug}_content`, newContent.trim(), 'text')
-    updateContent('knowledge', `custom_${newSlug}_date`, new Date().toISOString(), 'text')
+    updateContent('knowledge', `custom_${newSlug}_date`, newDate ? new Date(newDate).toISOString() : new Date().toISOString(), 'text')
     if (newImageUrl) {
       updateContent('knowledge', `custom_${newSlug}_image`, newImageUrl, 'image')
     }
@@ -160,6 +161,7 @@ function KnowledgeCentreContent() {
     setNewCategory('')
     setNewContent('')
     setNewImageUrl('')
+    setNewDate(new Date().toISOString().split('T')[0])
     setIsCreating(false)
     setShowAddModal(false)
   }
@@ -170,6 +172,7 @@ function KnowledgeCentreContent() {
     setNewCategory('')
     setNewContent('')
     setNewImageUrl('')
+    setNewDate(new Date().toISOString().split('T')[0])
     setShowAddModal(false)
   }
 
@@ -519,6 +522,17 @@ function KnowledgeCentreContent() {
                   value={newTitle}
                   onChange={(e) => setNewTitle(e.target.value)}
                   className="h-12 text-base"
+                />
+              </div>
+
+              {/* Date */}
+              <div>
+                <label className="block text-sm font-semibold text-foreground mb-2">Date</label>
+                <Input
+                  type="date"
+                  value={newDate}
+                  onChange={(e) => setNewDate(e.target.value)}
+                  className="h-12 text-base w-full flex"
                 />
               </div>
 

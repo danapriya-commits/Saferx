@@ -11,6 +11,28 @@ interface ContentItem {
   content_value: string;
 }
 
+async function deleteOldImage(oldUrl: string) {
+  if (!oldUrl) return;
+  if (oldUrl.includes('/storage/v1/object/public/Saferx/')) {
+    try {
+      const parts = oldUrl.split('/Saferx/');
+      if (parts.length > 1) {
+        const filename = decodeURIComponent(parts[1]);
+        if (filename) {
+          const { error } = await supabase.storage.from('Saferx').remove([filename]);
+          if (error) {
+            console.error(`Failed to delete old image ${filename}:`, error);
+          } else {
+            console.log(`Deleted old image: ${filename}`);
+          }
+        }
+      }
+    } catch (err) {
+      console.error('Error in deleteOldImage:', err);
+    }
+  }
+}
+
 export async function POST(req: Request) {
   try {
     const { items } = await req.json() as { items: ContentItem[] };
@@ -27,6 +49,11 @@ export async function POST(req: Request) {
         .single();
 
       if (published) {
+        if (published.content_value !== item.content_value && 
+            published.content_value?.includes('/storage/v1/object/public/Saferx/')) {
+          await deleteOldImage(published.content_value);
+        }
+
         await supabase
           .from('website_content')
           .update({ content_value: item.content_value })
@@ -71,6 +98,11 @@ export async function POST(req: Request) {
           .single();
 
         if (published) {
+          if (published.content_value !== draft.content_value && 
+              published.content_value?.includes('/storage/v1/object/public/Saferx/')) {
+            await deleteOldImage(published.content_value);
+          }
+
           await supabase
             .from('website_content')
             .update({ content_value: draft.content_value })
