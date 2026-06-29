@@ -95,7 +95,7 @@ export default function ContactPage() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="absolute inset-0 z-10 flex items-center justify-center bg-background/0 transition-colors group-hover:bg-background/20"
-                aria-label="Open in Google Maps"
+                aria-label="Open in Google Maps "
               >
                 <div className="rounded-full bg-primary p-4 text-primary-foreground opacity-0 transition-opacity group-hover:opacity-100 shadow-xl">
                   <ExternalLink className="h-6 w-6" />

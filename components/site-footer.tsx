@@ -39,7 +39,7 @@ import { COMPANY, SOLUTIONS, EQUIPMENT_CATEGORIES, WHATSAPP_NUMBER } from '@/lib
 
 export function SiteFooter() {
   const pathname = usePathname()
-  
+
   if (pathname?.startsWith('/admin')) {
     return null
   }
@@ -126,14 +126,14 @@ export function SiteFooter() {
             <h3 className="mb-6 text-lg font-semibold text-white">
               Contact Info
             </h3>
-            
+
             <div className="space-y-6 text-[15px] text-gray-300">
               <div className="space-y-1.5">
                 <p>For Domestic Enquiry</p>
-                <p>+91 9043490435</p>
+                <p>+91  7845555955</p>
                 <a href="mailto:sales@saferxmedical.com" className="block hover:text-white transition-colors">sales@saferxmedical.com</a>
               </div>
-              
+
               <div className="space-y-1.5">
                 <p>International Enquiry</p>
                 <p>+91 7010539681</p>

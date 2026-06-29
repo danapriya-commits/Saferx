@@ -208,7 +208,7 @@ export const WHATSAPP_NUMBER = '7845555955'
 export const COMPANY = {
   name: 'Dataprox360',
   short: 'Saferx Medical',
-  phone: '+91 9043490435',
+  phone: '+91  7845555955',
   email: 'sales@saferxmedical.com',
   address: 'D.No.9/24, Irugur Main Road, Irugur, Coimbatore-641103, Tamil Nadu, India',
 }
