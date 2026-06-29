@@ -248,7 +248,8 @@ function KnowledgeCentreContent() {
                       allowDelete={true}
                       fields={[
                         { key: 'title', label: 'Title', type: 'textarea', defaultValue: article.title },
-                        { key: 'excerpt', label: 'Excerpt', type: 'textarea', defaultValue: article.excerpt }
+                        { key: 'excerpt', label: 'Excerpt', type: 'textarea', defaultValue: article.excerpt },
+                        { key: 'content', label: 'Full Content', type: 'textarea', defaultValue: article.content }
                       ]}
                     >
                       <motion.div
@@ -332,7 +333,8 @@ function KnowledgeCentreContent() {
                         allowDelete={true}
                         fields={[
                           { key: 'title', label: 'Title', type: 'text', defaultValue: article.title },
-                          { key: 'excerpt', label: 'Excerpt', type: 'textarea', defaultValue: article.excerpt }
+                          { key: 'excerpt', label: 'Excerpt', type: 'textarea', defaultValue: article.excerpt },
+                          { key: 'content', label: 'Full Content', type: 'textarea', defaultValue: article.content }
                         ]}
                         className="group flex flex-col h-full overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-all hover:-translate-y-1 hover:shadow-md hover:border-primary/40"
                       >

@@ -132,7 +132,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
             </div>
 
             {/* Equipment Implemented */}
-            <div>
+            <div className="pb-8 md:pb-12">
               <h3 className="flex items-center gap-2 font-heading text-lg font-bold mb-4 text-foreground">
                 <Wrench className="h-5 w-5 text-primary" />
                 Key Equipment Implemented

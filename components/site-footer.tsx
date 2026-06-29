@@ -130,14 +130,15 @@ export function SiteFooter() {
             <div className="space-y-6 text-[15px] text-gray-300">
               <div className="space-y-1.5">
                 <p>For Domestic Enquiry</p>
-                <p>+91  7845555955</p>
+                <p>+91 7845555955</p>
                 <a href="mailto:sales@saferxmedical.com" className="block hover:text-white transition-colors">sales@saferxmedical.com</a>
+                <a href="mailto:danapriya@gmail.com" className="block hover:text-white transition-colors">danapriya@gmail.com</a>
               </div>
 
               <div className="space-y-1.5">
                 <p>International Enquiry</p>
-                <p>+91 7010539681</p>
-                <a href="mailto:intlsales@saferxmedical.com" className="block hover:text-white transition-colors">intlsales@saferxmedical.com</a>
+                <p>7010539681</p>
+                <a href="mailto:danapriya@saferxmedical.com" className="block hover:text-white transition-colors">danapriya@saferxmedical.com</a>
               </div>
             </div>
           </div>

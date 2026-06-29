@@ -80,8 +80,23 @@ function renderContent(content?: string) {
   })
 }
 
+import { useContent } from '@/components/admin/ContentProvider'
+
 export function ArticleModal({ article, onClose }: ArticleModalProps) {
   const [mounted, setMounted] = useState(false)
+  const { content } = useContent()
+
+  const cardId = ('isCustom' in article) && article.isCustom ? article.slug : article.slug // custom slugs already have 'custom_' prefix in page.tsx
+  const sectionId = 'knowledge'
+  
+  // Use CMS value or fallback to default
+  const title = content[sectionId]?.[`${cardId}_title`] || article.title
+  const articleContent = content[sectionId]?.[`${cardId}_content`] || article.content
+  const date = content[sectionId]?.[`${cardId}_date`] || article.date
+  
+  // Check for featured overrides if it was clicked from a featured card
+  const isFeaturedOverride = content[sectionId]?.[`featured_article_${cardId}_title`] 
+  const displayTitle = isFeaturedOverride || title
 
   useEffect(() => {
     setMounted(true)
@@ -134,11 +149,11 @@ export function ArticleModal({ article, onClose }: ArticleModalProps) {
                 {article.category}
               </span>
               <h1 className="font-heading text-2xl sm:text-3xl font-bold tracking-tight text-white mb-4 leading-snug">
-                {article.title}
+                {displayTitle}
               </h1>
               <div className="flex flex-wrap items-center gap-4 text-sm font-medium text-white/80">
                 <div className="flex items-center gap-1.5"><User className="h-4 w-4" /> {article.author}</div>
-                <div className="flex items-center gap-1.5"><CalendarDays className="h-4 w-4" /> {new Date(article.date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</div>
+                <div className="flex items-center gap-1.5"><CalendarDays className="h-4 w-4" /> {new Date(date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</div>
                 <div className="flex items-center gap-1.5"><Clock className="h-4 w-4" /> {article.readTime}</div>
               </div>
             </div>
@@ -163,7 +178,7 @@ export function ArticleModal({ article, onClose }: ArticleModalProps) {
             )}
 
             <div className="prose prose-base dark:prose-invert max-w-none">
-              {renderContent(article.content)}
+              {renderContent(articleContent)}
             </div>
           </div>
         </div>
