@@ -147,7 +147,7 @@ export function EditableCardModal({ section, cardId, fields, allowDelete, onClos
                   <textarea
                     value={formData[f.key] || ''}
                     onChange={e => handleTextChange(f.key, e.target.value)}
-                    rows={4}
+                    rows={f.key === 'content' ? 12 : 4}
                     className="w-full rounded-xl border-2 border-muted bg-background px-4 py-3 text-base transition-colors hover:border-muted-foreground/30 focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10 resize-y"
                   />
                 )}
