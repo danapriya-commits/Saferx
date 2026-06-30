@@ -42,11 +42,11 @@ export default async function SolutionDetail({ params }: { params: Promise<{ slu
               {/* Introduction */}
               <div className="prose prose-lg dark:prose-invert max-w-none">
                 <p className="text-xl font-medium text-foreground leading-relaxed">
-                  <EditableText section={`solution_${slug}`} fieldKey="intro" type="textarea">{solution.intro}</EditableText>
+                  <EditableText section={`solution_${slug}`} fieldKey="intro" multiline>{solution.intro}</EditableText>
                 </p>
                 {solution.subIntro && (
                   <p className="text-muted-foreground whitespace-pre-wrap mt-6">
-                    <EditableText section={`solution_${slug}`} fieldKey="subIntro" type="textarea">{solution.subIntro}</EditableText>
+                    <EditableText section={`solution_${slug}`} fieldKey="subIntro" multiline>{solution.subIntro}</EditableText>
                   </p>
                 )}
               </div>
@@ -63,7 +63,7 @@ export default async function SolutionDetail({ params }: { params: Promise<{ slu
                         <div key={itemIdx} className="flex items-start gap-3">
                           <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
                           <span className="text-foreground/90 font-medium flex-1">
-                            <EditableText section={`solution_${slug}`} fieldKey={`section_${idx}_item_${itemIdx}`} type="textarea">{item}</EditableText>
+                            <EditableText section={`solution_${slug}`} fieldKey={`section_${idx}_item_${itemIdx}`} multiline>{item}</EditableText>
                           </span>
                         </div>
                       ))}
