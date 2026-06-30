@@ -8,6 +8,7 @@ import { EditableText } from '@/components/admin/EditableText'
 import { EditableImage } from '@/components/admin/EditableImage'
 import { FeaturedProjectsGrid } from '@/components/featured-projects-grid'
 import { ProjectGalleryGrid } from '@/components/projects/project-gallery-grid'
+import { CategoriesGrid } from '@/components/projects/categories-grid'
 
 export const metadata = {
   title: 'Healthcare Projects & Success Stories | Saferx',
@@ -19,16 +20,6 @@ const STATS = [
   { id: 'stat2', defaultLabel: 'Healthcare Facilities Supported', defaultValue: '50+' },
   { id: 'stat3', defaultLabel: 'ICU & NICU Projects', defaultValue: '20+' },
   { id: 'stat4', defaultLabel: 'Diagnostic Centre Setups', defaultValue: '10+' },
-]
-
-const CATEGORIES = [
-  { id: 'cat1', name: 'ICU & Critical Care Projects', icon: Activity },
-  { id: 'cat2', name: 'NICU Development Projects', icon: Baby },
-  { id: 'cat3', name: 'Diagnostic Centre Setup', icon: ScanLine },
-  { id: 'cat4', name: 'Imaging Department Installations', icon: ScanLine },
-  { id: 'cat5', name: 'Laboratory Infrastructure Projects', icon: Microscope },
-  { id: 'cat6', name: 'Hospital Expansion Projects', icon: Building2 },
-  { id: 'cat7', name: 'Day Care Surgery Centre Setup', icon: Wrench },
 ]
 
 const WHY_CHOOSE = [
@@ -91,18 +82,8 @@ export default function ProjectsPage() {
               <EditableText section="projects" fieldKey="areas_desc">We provide end-to-end project execution across specialized healthcare departments.</EditableText>
             </p>
           </div>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {CATEGORIES.map((cat) => (
-              <div key={cat.id} className="group relative overflow-hidden rounded-2xl bg-secondary/10 border border-border p-6 transition-all hover:bg-primary/5 hover:border-primary/30 hover:-translate-y-1">
-                <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-background shadow-sm border border-border group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                  <cat.icon className="h-6 w-6 text-primary group-hover:text-primary-foreground" />
-                </div>
-                <h3 className="font-heading text-lg font-bold text-foreground">
-                  <EditableText section="projects" fieldKey={`${cat.id}_name`}>{cat.name}</EditableText>
-                </h3>
-              </div>
-            ))}
-          </div>
+          
+          <CategoriesGrid />
         </div>
       </section>
 

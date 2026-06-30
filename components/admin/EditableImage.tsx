@@ -1,4 +1,4 @@
-'use client'
+  'use client'
 
 import React, { useState } from 'react'
 import Image, { ImageProps } from 'next/image'
@@ -17,16 +17,23 @@ export function EditableImage({ section, fieldKey, defaultSrc, className, asImg,
   const { content, isEditing, updateContent } = useContent()
   const [isUploading, setIsUploading] = useState(false)
   const inputContainerRef = React.useRef<HTMLDivElement>(null)
+  const eyeIconRef = React.useRef<HTMLButtonElement>(null)
 
   // Stop native event bubbling so React's synthetic event system (and Next.js <Link>) never sees the click.
   // This prevents the parent <Link> from calling preventDefault() which cancels the file dialog.
   React.useEffect(() => {
     const el = inputContainerRef.current
-    if (!el) return
-    const stopPropagation = (e: MouseEvent) => e.stopPropagation()
-    el.addEventListener('click', stopPropagation)
-    return () => el.removeEventListener('click', stopPropagation)
-  }, [])
+    const stopPropagation = (e: MouseEvent) => {
+      e.stopPropagation()
+      // Note: do not preventDefault here, otherwise file input won't open.
+    }
+    
+    if (el) el.addEventListener('click', stopPropagation)
+    
+    return () => {
+      if (el) el.removeEventListener('click', stopPropagation)
+    }
+  }, [isEditing, hideToggle])
 
   const currentSrc = content[section]?.[fieldKey] || defaultSrc || '/images/placeholder.jpg'
   // Visibility is true by default, unless explicitly set to 'false'
@@ -116,9 +123,9 @@ export function EditableImage({ section, fieldKey, defaultSrc, className, asImg,
       {/* Eye Icon Toggle - Moved to top right */}
       {!hideToggle && (
         <button 
+          ref={eyeIconRef}
           type="button"
           onClick={toggleVisibility}
-          onPointerDown={(e) => { e.stopPropagation(); toggleVisibility(e as any); }}
           className="absolute top-3 right-3 pointer-events-auto p-2 bg-slate-800/80 hover:bg-slate-700 text-white rounded-full shadow-lg transition-all z-50 cursor-pointer flex items-center justify-center hover:scale-110"
           title={isVisible ? "Hide on live website" : "Show on live website"}
         >

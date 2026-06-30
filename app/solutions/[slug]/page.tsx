@@ -3,6 +3,7 @@ import { SOLUTIONS_DATA } from '@/lib/solutions-content'
 import { PageHero } from '@/components/section'
 import Link from 'next/link'
 import { ArrowRight, CheckCircle2 } from 'lucide-react'
+import { EditableText } from '@/components/admin/EditableText'
 
 // Generate static params for all solutions
 export function generateStaticParams() {
@@ -22,13 +23,13 @@ export default async function SolutionDetail({ params }: { params: Promise<{ slu
   return (
     <div className="flex flex-col min-h-screen">
       <PageHero
-        title={solution.title}
-        description={solution.shortDescription}
+        title={<EditableText section={`solution_${slug}`} fieldKey="title">{solution.title}</EditableText>}
+        description={<EditableText section={`solution_${slug}`} fieldKey="shortDescription">{solution.shortDescription}</EditableText>}
         breadcrumb={solution.title}
         eyebrow="Solutions"
         backgroundImage={solution.image}
-        section="solutions_hub"
-        fieldKey={`image_${solution.slug}`}
+        section={`solution_${slug}`}
+        fieldKey="hero_bg"
       />
 
       <section className="py-16 sm:py-24 bg-background">
@@ -41,11 +42,11 @@ export default async function SolutionDetail({ params }: { params: Promise<{ slu
               {/* Introduction */}
               <div className="prose prose-lg dark:prose-invert max-w-none">
                 <p className="text-xl font-medium text-foreground leading-relaxed">
-                  {solution.intro}
+                  <EditableText section={`solution_${slug}`} fieldKey="intro" type="textarea">{solution.intro}</EditableText>
                 </p>
                 {solution.subIntro && (
                   <p className="text-muted-foreground whitespace-pre-wrap mt-6">
-                    {solution.subIntro}
+                    <EditableText section={`solution_${slug}`} fieldKey="subIntro" type="textarea">{solution.subIntro}</EditableText>
                   </p>
                 )}
               </div>
@@ -55,13 +56,15 @@ export default async function SolutionDetail({ params }: { params: Promise<{ slu
                 {solution.sections.map((section, idx) => (
                   <div key={idx} className="rounded-2xl border border-border bg-card p-8 shadow-sm">
                     <h3 className="font-heading text-2xl font-bold text-foreground mb-6">
-                      {section.title}
+                      <EditableText section={`solution_${slug}`} fieldKey={`section_${idx}_title`}>{section.title}</EditableText>
                     </h3>
                     <div className="grid gap-4 sm:grid-cols-2">
                       {section.items.map((item, itemIdx) => (
                         <div key={itemIdx} className="flex items-start gap-3">
                           <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                          <span className="text-foreground/90 font-medium">{item}</span>
+                          <span className="text-foreground/90 font-medium flex-1">
+                            <EditableText section={`solution_${slug}`} fieldKey={`section_${idx}_item_${itemIdx}`} type="textarea">{item}</EditableText>
+                          </span>
                         </div>
                       ))}
                     </div>
@@ -72,9 +75,11 @@ export default async function SolutionDetail({ params }: { params: Promise<{ slu
               {/* CTA */}
               <div className="rounded-2xl bg-primary p-8 sm:p-10 text-primary-foreground text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-6 shadow-lg">
                 <div>
-                  <h3 className="font-heading text-2xl font-bold mb-2">Ready to Upgrade Your Healthcare Tech?</h3>
+                  <h3 className="font-heading text-2xl font-bold mb-2">
+                    <EditableText section="solutions_hub" fieldKey="cta_title">Ready to Upgrade Your Healthcare Tech?</EditableText>
+                  </h3>
                   <p className="text-primary-foreground/80 max-w-xl">
-                    Speak with our specialists to explore the best equipment and infrastructure solutions for your facility.
+                    <EditableText section="solutions_hub" fieldKey="cta_desc">Speak with our specialists to explore the best equipment and infrastructure solutions for your facility.</EditableText>
                   </p>
                 </div>
                 <Link
@@ -93,7 +98,7 @@ export default async function SolutionDetail({ params }: { params: Promise<{ slu
               {/* Other Solutions */}
               <div className="rounded-2xl border border-border bg-card p-6 shadow-sm sticky top-32">
                 <h4 className="font-heading text-xl font-bold text-foreground mb-6">
-                  More Solutions
+                  <EditableText section="solutions_hub" fieldKey="sidebar_title">More Solutions</EditableText>
                 </h4>
                 <div className="space-y-3">
                   {SOLUTIONS_DATA.filter((s) => s.slug !== solution.slug).map((other) => (
@@ -107,7 +112,7 @@ export default async function SolutionDetail({ params }: { params: Promise<{ slu
                       </div>
                       <div>
                         <p className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">
-                          {other.title}
+                          <EditableText section={`solution_${other.slug}`} fieldKey="title">{other.title}</EditableText>
                         </p>
                       </div>
                     </Link>

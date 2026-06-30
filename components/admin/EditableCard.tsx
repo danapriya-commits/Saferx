@@ -48,9 +48,11 @@ export function EditableCard({
   }
 
   const handleClick = (e: React.MouseEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    setIsModalOpen(true)
+    if (fields && fields.length > 0) {
+      e.preventDefault()
+      e.stopPropagation()
+      setIsModalOpen(true)
+    }
   }
 
   const handleDelete = (e: React.MouseEvent) => {

@@ -1,11 +1,18 @@
+'use client'
+
 import { PageHero } from '@/components/section'
 import { SOLUTIONS_DATA } from '@/lib/solutions-content'
-import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { ArrowRight } from 'lucide-react'
 import { EditableText } from '@/components/admin/EditableText'
 import { EditableImage } from '@/components/admin/EditableImage'
+import { EditableCard } from '@/components/admin/EditableCard'
+import { useContent } from '@/components/admin/ContentProvider'
 
 export default function SolutionsPage() {
+  const router = useRouter()
+  const { content } = useContent()
+
   return (
     <div className="flex flex-col min-h-screen">
       <PageHero
@@ -31,43 +38,65 @@ export default function SolutionsPage() {
           </div>
 
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {SOLUTIONS_DATA.map((solution) => (
-              <Link 
-                href={`/solutions/${solution.slug}`} 
-                key={solution.slug}
-                className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-primary/50"
-              >
-                <div className="relative h-48 overflow-hidden bg-secondary/20">
-                  <div className="absolute inset-0 bg-primary/5 group-hover:bg-transparent transition-colors z-10" />
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <EditableImage
-                    asImg
-                    section="solutions_hub"
-                    fieldKey={`image_${solution.slug}`}
-                    defaultSrc={solution.image}
-                    alt={solution.title}
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                  <div className="absolute bottom-4 left-4 z-20 flex h-12 w-12 items-center justify-center rounded-xl bg-background/90 shadow-sm backdrop-blur-md">
-                    <solution.icon className="h-6 w-6 text-primary" />
+            {SOLUTIONS_DATA.map((solution) => {
+              const cardId = `solution_${solution.slug}`
+              const currentTitle = content['solutions_hub']?.[`${cardId}_title`] ?? solution.title
+              const currentDesc = content['solutions_hub']?.[`${cardId}_desc`] ?? solution.shortDescription
+
+              return (
+                <EditableCard
+                  key={solution.slug}
+                  section="solutions_hub"
+                  cardId={cardId}
+                  allowDelete={false}
+                  fields={[
+                    { key: 'title', label: 'Title', type: 'text', defaultValue: solution.title },
+                    { key: 'desc', label: 'Short Description', type: 'textarea', defaultValue: solution.shortDescription }
+                  ]}
+                  onClick={(e: React.MouseEvent) => {
+                    if (
+                      (e.target as HTMLElement).closest('button') || 
+                      (e.target as HTMLElement).closest('input')
+                    ) {
+                      return;
+                    }
+                    router.push(`/solutions/${solution.slug}`);
+                  }}
+                  className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-primary/50 cursor-pointer"
+                >
+                  <div className="relative h-48 overflow-hidden bg-secondary/20">
+                    <div className="absolute inset-0 bg-primary/5 group-hover:bg-transparent transition-colors z-10 pointer-events-none" />
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <EditableImage
+                      asImg
+                      hideToggle
+                      section="solutions_hub"
+                      fieldKey={`image_${solution.slug}`}
+                      defaultSrc={solution.image}
+                      alt={currentTitle}
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                    <div className="absolute bottom-4 left-4 z-20 flex h-12 w-12 items-center justify-center rounded-xl bg-background/90 shadow-sm backdrop-blur-md pointer-events-none">
+                      <solution.icon className="h-6 w-6 text-primary" />
+                    </div>
                   </div>
-                </div>
-                
-                <div className="flex flex-1 flex-col p-6">
-                  <h3 className="font-heading text-xl font-bold text-foreground mb-3 group-hover:text-primary transition-colors">
-                    {solution.title}
-                  </h3>
-                  <p className="text-muted-foreground text-sm flex-1 mb-6">
-                    {solution.shortDescription}
-                  </p>
                   
-                  <div className="mt-auto flex items-center text-sm font-semibold text-primary">
-                    Explore Solution
-                    <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  <div className="flex flex-1 flex-col p-6 pointer-events-none">
+                    <h3 className="font-heading text-xl font-bold text-foreground mb-3 group-hover:text-primary transition-colors">
+                      {currentTitle}
+                    </h3>
+                    <p className="text-muted-foreground text-sm flex-1 mb-6">
+                      {currentDesc}
+                    </p>
+                    
+                    <div className="mt-auto flex items-center text-sm font-semibold text-primary">
+                      Explore Solution
+                      <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                    </div>
                   </div>
-                </div>
-              </Link>
-            ))}
+                </EditableCard>
+              )
+            })}
           </div>
 
         </div>
