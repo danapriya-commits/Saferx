@@ -282,7 +282,7 @@ Patient monitors are a cornerstone of patient care. Selecting the right monitor 
 We assist healthcare facilities in auditing their current monitoring setup and recommending tailored solutions. We negotiate with top-tier vendors to get you the best overall value, not just the lowest initial price.
 
 ### Need Expert Guidance?
-Contact our team to explore patient monitoring solutions that perfectly fit your clinical environment.
+Contact our team to explore Critical Care solutions that perfectly fit your clinical environment.
     `
   },
   {
@@ -365,7 +365,7 @@ Looking to invest in a new Digital X-Ray system? Contact our imaging experts for
     image: '/images/healthcare_hero_bg.png',
     category: 'Laboratory Solutions',
     content: `
-Choosing the right hematology analyzer can drastically improve lab turnaround times and diagnostic accuracy. Here is what you need to know before making your next laboratory equipment purchase.
+Choosing the right hematology analyzer can drastically improve lab turnaround times and diagnostic accuracy. Here is what you need to know before making your next Laboratory purchase.
 
 ### 3-Part vs. 5-Part Differential
 * **3-Part Differential:** Suitable for small clinics and basic screening. Differentiates white blood cells into lymphocytes, monocytes, and granulocytes.
@@ -392,15 +392,15 @@ Contact our lab specialists today to find the perfect hematology analyzer for yo
   },
   {
     slug: 'fetal-monitor-selection-guide',
-    title: 'Fetal Monitor Selection Guide',
-    excerpt: 'Maternal and fetal safety depends on reliable monitoring. This guide covers the essential features to look for in a fetal monitor.',
+    title: 'Infant Incubator Selection Guide',
+    excerpt: 'Maternal and fetal safety depends on reliable monitoring. This guide covers the essential features to look for in a Infant Incubator.',
     date: 'Jun 02, 2024',
     author: 'Saferx Procurement Team',
     readTime: '4 min read',
     image: '/images/project-hospital.png',
     category: "Women's Health",
     content: `
-Maternal and fetal safety depends on reliable monitoring. This guide covers the essential features to look for when selecting fetal monitors for labor and delivery departments.
+Maternal and fetal safety depends on reliable monitoring. This guide covers the essential features to look for when selecting Infant Incubators for labor and delivery departments.
 
 ### Essential Monitoring Parameters
 * Fetal Heart Rate (FHR) via ultrasound.
@@ -418,13 +418,13 @@ Maternal and fetal safety depends on reliable monitoring. This guide covers the 
 * Ample internal memory to store traces in case of network or paper failures.
 
 **Central Monitoring Compatibility**
-* Ability to network multiple fetal monitors to a central station at the nurses' desk.
+* Ability to network multiple Infant Incubators to a central station at the nurses' desk.
 
 ### How Saferx Helps
-We assist maternity hospitals and women's health clinics in upgrading their labor and delivery suites. We help you choose fetal monitors that provide crystal-clear traces and stand up to the rigors of daily use.
+We assist maternity hospitals and women's health clinics in upgrading their labor and delivery suites. We help you choose Infant Incubators that provide crystal-clear traces and stand up to the rigors of daily use.
 
 ### Need Expert Guidance?
-Ensure the best care for mothers and babies. Reach out to our team for expert advice on fetal monitoring technology.
+Ensure the best care for mothers and babies. Reach out to our team for expert advice on Infant Incubatoring technology.
     `
   }
 ]

@@ -50,7 +50,7 @@ export const SOLUTIONS_DATA: SolutionDetail[] = [
     image: '/images/hero-icu.png',
     sections: [
       {
-        title: 'Patient Monitoring',
+        title: 'Critical Care',
         items: [
           'Multiparameter Patient Monitors',
           'Modular Patient Monitors',
@@ -204,7 +204,7 @@ export const SOLUTIONS_DATA: SolutionDetail[] = [
       {
         title: 'Obstetrics',
         items: [
-          'Fetal Monitors',
+          'Infant Incubators',
           'CTG Machines',
           'Doppler Systems',
           'Labour Monitoring Systems'

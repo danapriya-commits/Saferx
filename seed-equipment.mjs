@@ -7,8 +7,8 @@ const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseKey) {
-  console.error("Missing Supabase credentials in .env.local");
-  process.exit(1);
+    console.error("Missing Supabase credentials in .env.local");
+    process.exit(1);
 }
 
 const supabase = createClient(supabaseUrl, supabaseKey);
@@ -71,11 +71,11 @@ const EQUIPMENT_LIST = [
         description: "Digital 12-channel electrocardiograph with advanced interpretation algorithms and printing capabilities. Screen: 8\" color touch screen. Paper size: A4/Letter or Z-fold. Battery: Prints up to 300 ECGs."
     },
     {
-        title: "Fetal Monitor",
+        title: "Infant Incubator",
         category: "Maternal & Neonatal Care",
-        short_description: "High-performance fetal and maternal monitor for tracking fetal heart rate and uterine activity.",
+        short_description: "Advanced neonatal care solution that provides precise thermal regulation and a safe environment for premature and vulnerable infants.",
         image_url: "/images/cat-neonatal.png",
-        description: "High-performance fetal and maternal monitor for tracking fetal heart rate and uterine activity. Display: 12\" folding screen. Probe: Waterproof 12-crystal ultrasound. Storage: 24h CTG trace."
+        description: "Advanced neonatal care solution that provides precise thermal regulation and a safe environment for premature and vulnerable infants. Display: 12\" folding screen. Probe: Waterproof 12-crystal ultrasound. Storage: 24h CTG trace."
     },
     {
         title: "CTG Machine",
@@ -121,49 +121,49 @@ const EQUIPMENT_LIST = [
     },
     {
         title: "Hematology Analyzer",
-        category: "Laboratory Equipment",
+        category: "Laboratory",
         short_description: "Fully automated 5-part differential blood cell counter utilizing laser flow cytometry.",
         image_url: "/images/cat-lab.png",
         description: "Fully automated 5-part differential blood cell counter utilizing laser flow cytometry. Throughput: 60 to 90 tests/hour. Parameters: 29 reportable parameters. Sample volume: 15 µL."
     },
     {
         title: "Biochemistry Analyzer",
-        category: "Laboratory Equipment",
+        category: "Laboratory",
         short_description: "Automated clinical chemistry analyzer for high-volume serum and plasma testing.",
         image_url: "/images/cat-lab.png",
         description: "Automated clinical chemistry analyzer for high-volume serum and plasma testing. Throughput: Up to 800 tests/hour. Cuvette: Hard glass permanent. Reagent positions: 80+."
     },
     {
         title: "CLIA Analyzer",
-        category: "Laboratory Equipment",
+        category: "Laboratory",
         short_description: "Chemiluminescence immunoassay system for highly sensitive hormone, infectious disease, and tumor marker testing.",
         image_url: "/images/cat-lab.png",
         description: "Chemiluminescence immunoassay system for highly sensitive hormone, infectious disease, and tumor marker testing. Throughput: Up to 120 tests/hour. Time to first result: 15 mins. Methodology: PMT-based chemiluminescence."
     },
     {
         title: "Electrolyte Analyzer",
-        category: "Laboratory Equipment",
+        category: "Laboratory",
         short_description: "Compact analyzer utilizing Ion Selective Electrode (ISE) technology for rapid Na, K, Cl, Ca, and pH testing.",
         image_url: "/images/cat-lab.png",
         description: "Compact analyzer utilizing Ion Selective Electrode (ISE) technology for rapid Na, K, Cl, Ca, and pH testing. Sample volume: <100 µL. Electrodes: Long-life maintenance-free. Reagent: All-in-one pack."
     },
     {
         title: "OT Light",
-        category: "Operation Theatre Equipment",
+        category: "Operation Theatre",
         short_description: "Advanced LED surgical operating light providing shadowless illumination with adjustable color temperature.",
         image_url: "/images/project-hospital.png",
         description: "Advanced LED surgical operating light providing shadowless illumination with adjustable color temperature. Intensity: Up to 160,000 Lux. Color Temp: 3500K - 5000K. Lifespan: >60,000 hours LED life."
     },
     {
         title: "OT Table",
-        category: "Operation Theatre Equipment",
+        category: "Operation Theatre",
         short_description: "Fully electro-hydraulic operating table offering comprehensive positioning for all surgical disciplines.",
         image_url: "/images/project-hospital.png",
         description: "Fully electro-hydraulic operating table offering comprehensive positioning for all surgical disciplines. Weight capacity: Up to 350kg. Movements: Trendelenburg, Tilt, Elevation, Slide. Battery backup included."
     },
     {
         title: "Anaesthesia Workstation",
-        category: "Operation Theatre Equipment",
+        category: "Operation Theatre",
         short_description: "Integrated anaesthesia delivery system with advanced ventilation capabilities and comprehensive gas monitoring.",
         image_url: "/images/project-hospital.png",
         description: "Integrated anaesthesia delivery system with advanced ventilation capabilities and comprehensive gas monitoring. Ventilator: VCV, PCV, SIMV, PSV modes. Vaporizers: Selectatec compatible (Iso/Sevo/Halo). Screen: 15\" touch screen."
@@ -171,38 +171,38 @@ const EQUIPMENT_LIST = [
 ];
 
 async function seed() {
-  console.log("Seeding medical equipment data...");
-  let count = 0;
-  
-  for (const item of EQUIPMENT_LIST) {
-    const { data: existing } = await supabase
-      .from('medical_equipment')
-      .select('id')
-      .eq('title', item.title)
-      .single();
+    console.log("Seeding medical equipment data...");
+    let count = 0;
 
-    if (!existing) {
-      const { error } = await supabase.from('medical_equipment').insert({
-        title: item.title,
-        category: item.category,
-        short_description: item.short_description,
-        description: item.description,
-        image_url: item.image_url,
-        is_active: true
-      });
-      
-      if (error) {
-        console.error("Error inserting:", item.title, error);
-      } else {
-        console.log("Inserted:", item.title);
-        count++;
-      }
-    } else {
-      console.log("Skipping existing:", item.title);
+    for (const item of EQUIPMENT_LIST) {
+        const { data: existing } = await supabase
+            .from('medical_equipment')
+            .select('id')
+            .eq('title', item.title)
+            .single();
+
+        if (!existing) {
+            const { error } = await supabase.from('medical_equipment').insert({
+                title: item.title,
+                category: item.category,
+                short_description: item.short_description,
+                description: item.description,
+                image_url: item.image_url,
+                is_active: true
+            });
+
+            if (error) {
+                console.error("Error inserting:", item.title, error);
+            } else {
+                console.log("Inserted:", item.title);
+                count++;
+            }
+        } else {
+            console.log("Skipping existing:", item.title);
+        }
     }
-  }
-  
-  console.log(`Finished! Inserted ${count} new items.`);
+
+    console.log(`Finished! Inserted ${count} new items.`);
 }
 
 seed();

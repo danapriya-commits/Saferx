@@ -85,7 +85,7 @@ export default function TermsConditionsPage() {
           <p>
             <strong>Saferx Medical Supplies Pvt. Ltd.</strong><br />
             D.No. 9/24, Irugur Main Road, Irugur, Coimbatore – 641103, Tamil Nadu, India<br />
-            Email: sales@saferxmedical.com | Phone: +91 90434 90435
+            Email: sales@saferxmedical.com | Phone:+91 7845555955
           </p>
         </div>
       </section>

@@ -88,8 +88,8 @@ function EquipmentPageContent() {
       if (!isEditing && !isVisible) return false
 
       const matchesCategory = activeCategory === 'All' || product.category === activeCategory
-      const matchesSearch = (product.title || '').toLowerCase().includes(searchQuery.toLowerCase()) || 
-                            (product.short_description || '').toLowerCase().includes(searchQuery.toLowerCase())
+      const matchesSearch = (product.title || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (product.short_description || '').toLowerCase().includes(searchQuery.toLowerCase())
       return matchesCategory && matchesSearch
     })
   }, [activeCategory, searchQuery, equipmentList, content, isEditing])
@@ -107,15 +107,15 @@ function EquipmentPageContent() {
       {/* Main Content & Products */}
       <section className="py-14 sm:py-20 flex-1 bg-secondary/10">
         <div className="mx-auto max-w-[1536px] container-px">
-          
+
           <div className="flex flex-col lg:flex-row gap-8 items-start">
             {/* Sidebar / Filters */}
             <div className="w-full lg:w-72 shrink-0 space-y-6 lg:sticky lg:top-32">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <input 
-                  type="text" 
-                  placeholder="Search equipment..." 
+                <input
+                  type="text"
+                  placeholder="Search equipment..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full rounded-lg border border-input bg-background py-3 pl-10 pr-4 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
@@ -129,8 +129,8 @@ function EquipmentPageContent() {
                     onClick={() => setActiveCategory('All')}
                     className={cn(
                       'flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
-                      activeCategory === 'All' 
-                        ? 'bg-primary text-primary-foreground' 
+                      activeCategory === 'All'
+                        ? 'bg-primary text-primary-foreground'
                         : 'text-muted-foreground hover:bg-secondary hover:text-foreground'
                     )}
                   >
@@ -142,8 +142,8 @@ function EquipmentPageContent() {
                       onClick={() => setActiveCategory(cat.name)}
                       className={cn(
                         'flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors text-left',
-                        activeCategory === cat.name 
-                          ? 'bg-primary text-primary-foreground' 
+                        activeCategory === cat.name
+                          ? 'bg-primary text-primary-foreground'
                           : 'text-muted-foreground hover:bg-secondary hover:text-foreground'
                       )}
                     >
@@ -179,72 +179,73 @@ function EquipmentPageContent() {
                   {filteredProducts.map(product => {
                     const isVisible = content['equipment']?.[`image_${product.id}_visible`] !== 'false'
                     return (
-                    <div key={product.id} className={`relative group/edit transition-all duration-300 ${!isVisible ? 'opacity-40 grayscale' : ''}`}>
-                      <ProductCard 
-                        product={{
-                          id: product.id,
-                          name: product.title,
-                          description: product.short_description,
-                          department: product.category,
-                          category: product.category,
-                          image: product.image_url ? product.image_url : '/images/placeholder.jpg',
-                          features: [],
-                          technicalSpecs: product.specifications ? [product.specifications] : [],
-                          benefits: [],
-                          installationSupport: ''
-                        }} 
-                        onViewDetails={() => {
-                          if (isEditing) {
-                            setEditingProduct(product)
-                          } else {
-                            setSelectedProduct({
-                              id: product.id,
-                              name: product.title,
-                              description: product.full_description || product.short_description,
-                              department: product.category,
-                              category: product.category,
-                              image: product.image_url ? product.image_url : '/images/placeholder.jpg',
-                              features: [],
-                              technicalSpecs: product.specifications ? [product.specifications] : [],
-                              benefits: [],
-                              installationSupport: ''
-                            })
-                          }
-                        }}
-                      />
-                      {isEditing && (
-                        <div className="absolute -top-3 -right-3 z-10 hidden group-hover/edit:flex gap-2">
-                          <button
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              updateContent('equipment', `image_${product.id}_visible`, isVisible ? 'false' : 'true', 'visibility');
-                            }}
-                            className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-800 text-white shadow-sm hover:bg-slate-700 hover:scale-110 transition-all"
-                            title={isVisible ? "Hide Equipment" : "Show Equipment"}
-                          >
-                            {isVisible ? (
-                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
-                            ) : (
-                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/></svg>
-                            )}
-                          </button>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              setDeletingProductId(product.id)
-                            }}
-                            className="flex h-8 w-8 items-center justify-center rounded-full bg-red-100 text-red-600 shadow-sm hover:bg-red-600 hover:text-white hover:scale-110 transition-all"
-                            title="Delete Equipment"
-                          >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  )})}
+                      <div key={product.id} className={`relative group/edit transition-all duration-300 ${!isVisible ? 'opacity-40 grayscale' : ''}`}>
+                        <ProductCard
+                          product={{
+                            id: product.id,
+                            name: product.title,
+                            description: product.short_description,
+                            department: product.category,
+                            category: product.category,
+                            image: product.image_url ? product.image_url : '/images/placeholder.jpg',
+                            features: [],
+                            technicalSpecs: product.specifications ? [product.specifications] : [],
+                            benefits: [],
+                            installationSupport: ''
+                          }}
+                          onViewDetails={() => {
+                            if (isEditing) {
+                              setEditingProduct(product)
+                            } else {
+                              setSelectedProduct({
+                                id: product.id,
+                                name: product.title,
+                                description: product.full_description || product.short_description,
+                                department: product.category,
+                                category: product.category,
+                                image: product.image_url ? product.image_url : '/images/placeholder.jpg',
+                                features: [],
+                                technicalSpecs: product.specifications ? [product.specifications] : [],
+                                benefits: [],
+                                installationSupport: ''
+                              })
+                            }
+                          }}
+                        />
+                        {isEditing && (
+                          <div className="absolute -top-3 -right-3 z-10 hidden group-hover/edit:flex gap-2">
+                            <button
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                updateContent('equipment', `image_${product.id}_visible`, isVisible ? 'false' : 'true', 'visibility');
+                              }}
+                              className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-800 text-white shadow-sm hover:bg-slate-700 hover:scale-110 transition-all"
+                              title={isVisible ? "Hide Equipment" : "Show Equipment"}
+                            >
+                              {isVisible ? (
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" /><circle cx="12" cy="12" r="3" /></svg>
+                              ) : (
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" /><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" /><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61" /><line x1="2" x2="22" y1="2" y2="22" /></svg>
+                              )}
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                setDeletingProductId(product.id)
+                              }}
+                              className="flex h-8 w-8 items-center justify-center rounded-full bg-red-100 text-red-600 shadow-sm hover:bg-red-600 hover:text-white hover:scale-110 transition-all"
+                              title="Delete Equipment"
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18" /><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" /><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" /><line x1="10" x2="10" y1="11" y2="17" /><line x1="14" x2="14" y1="11" y2="17" /></svg>
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    )
+                  })}
                   {isEditing && (
-                    <button 
+                    <button
                       onClick={() => setIsAddModalOpen(true)}
                       className="group flex flex-col items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-border bg-secondary/10 hover:bg-secondary/30 transition-all duration-300 hover:-translate-y-1 min-h-[350px] cursor-pointer"
                     >
@@ -266,7 +267,7 @@ function EquipmentPageContent() {
                       <p className="text-muted-foreground mt-2 max-w-sm mb-6">
                         Click the button below to add your first piece of equipment to this category.
                       </p>
-                      <button 
+                      <button
                         onClick={() => setIsAddModalOpen(true)}
                         className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary/90 transition-colors"
                       >
@@ -280,7 +281,7 @@ function EquipmentPageContent() {
                       <p className="text-muted-foreground mt-2 max-w-sm">
                         We couldn't find any equipment matching your search criteria. Try adjusting your filters or search terms.
                       </p>
-                      <button 
+                      <button
                         onClick={() => { setSearchQuery(''); setActiveCategory('All'); }}
                         className="mt-6 font-medium text-primary hover:underline"
                       >
@@ -354,7 +355,7 @@ function EquipmentPageContent() {
             >
               Request Consultation
             </Link>
-            <Link 
+            <Link
               href="#inquiry"
               className="inline-flex h-12 items-center justify-center rounded-full border border-primary-foreground/20 bg-primary-foreground/10 px-8 font-semibold text-primary-foreground backdrop-blur-sm transition-all hover:bg-primary-foreground/20"
             >
@@ -371,7 +372,7 @@ function EquipmentPageContent() {
             <h2 className="font-heading text-3xl font-bold text-foreground">Equipment Inquiry</h2>
             <p className="mt-2 text-muted-foreground">Fill out the form below to request a quote or schedule a consultation.</p>
           </div>
-          
+
           <div className="rounded-2xl border border-border bg-background p-6 md:p-10 shadow-lg">
             <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
               <div className="grid gap-6 md:grid-cols-2">
@@ -403,9 +404,9 @@ function EquipmentPageContent() {
                   <option value="monitoring">Monitoring Systems</option>
                   <option value="critical-care">Critical Care</option>
                   <option value="imaging">Diagnostic Imaging</option>
-                  <option value="lab">Laboratory Equipment</option>
+                  <option value="lab">Laboratory</option>
                   <option value="neonatal">Maternal & Neonatal Care</option>
-                  <option value="ot">Operation Theatre Equipment</option>
+                  <option value="ot">Operation Theatre</option>
                   <option value="multiple">Multiple / Complete Setup</option>
                 </select>
               </div>
@@ -425,8 +426,8 @@ function EquipmentPageContent() {
 
       {/* Render Product Modal */}
       {selectedProduct && (
-        <ProductModal 
-          product={selectedProduct} 
+        <ProductModal
+          product={selectedProduct}
           allProducts={equipmentList.map(p => ({
             id: p.id,
             name: p.title,
@@ -446,14 +447,14 @@ function EquipmentPageContent() {
               newParams.delete('product')
               router.replace(`${pathname}${newParams.toString() ? `?${newParams.toString()}` : ''}`, { scroll: false })
             }
-          }} 
+          }}
           onSelectProduct={setSelectedProduct}
         />
       )}
 
       {/* Render Edit Equipment Modal */}
       {mounted && editingProduct && createPortal(
-        <EditEquipmentModal 
+        <EditEquipmentModal
           product={editingProduct}
           onClose={() => setEditingProduct(null)}
           onSuccess={() => {
@@ -506,7 +507,7 @@ function EquipmentPageContent() {
 
       {/* Render Add Equipment Modal */}
       {mounted && isAddModalOpen && createPortal(
-        <AddEquipmentModal 
+        <AddEquipmentModal
           onClose={() => setIsAddModalOpen(false)}
           onSuccess={() => {
             setIsAddModalOpen(false)
@@ -534,7 +535,7 @@ function EditEquipmentModal({ product, onClose, onSuccess }: { product: any, onC
     if (!file) return
     const fd = new FormData()
     fd.append('file', file)
-    
+
     try {
       const res = await fetch('/api/editor/upload', {
         method: 'POST',
@@ -555,7 +556,7 @@ function EditEquipmentModal({ product, onClose, onSuccess }: { product: any, onC
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!formData.title) return alert('Title is required')
-    
+
     setIsSubmitting(true)
     try {
       const res = await fetch(`/api/editor/equipment/${product.id}`, {
@@ -563,7 +564,7 @@ function EditEquipmentModal({ product, onClose, onSuccess }: { product: any, onC
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
       })
-      
+
       if (res.ok) {
         onSuccess()
       } else {
@@ -584,10 +585,10 @@ function EditEquipmentModal({ product, onClose, onSuccess }: { product: any, onC
         <div className="flex items-center justify-between border-b border-border p-6">
           <h2 className="font-heading text-xl font-bold">Edit Equipment</h2>
           <button onClick={onClose} className="rounded-lg p-2 hover:bg-secondary transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
           </button>
         </div>
-        
+
         <div className="flex-1 overflow-y-auto p-6">
           <form id="edit-equipment-form" onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
@@ -596,18 +597,18 @@ function EditEquipmentModal({ product, onClose, onSuccess }: { product: any, onC
                 <div className="relative aspect-video rounded-xl overflow-hidden bg-secondary border border-border">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={formData.image_url} alt="Preview" className="w-full h-full object-cover" />
-                  <button 
-                    type="button" 
-                    onClick={() => setFormData(prev => ({...prev, image_url: ''}))}
+                  <button
+                    type="button"
+                    onClick={() => setFormData(prev => ({ ...prev, image_url: '' }))}
                     className="absolute top-2 right-2 bg-black/50 text-white p-1.5 rounded-lg hover:bg-black/70"
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
                   </button>
                 </div>
               ) : (
                 <label className="flex flex-col items-center justify-center w-full aspect-video border-2 border-dashed border-border rounded-xl cursor-pointer hover:bg-secondary/50 transition-colors">
                   <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                    <svg className="w-8 h-8 mb-4 text-muted-foreground" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16"><path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/></svg>
+                    <svg className="w-8 h-8 mb-4 text-muted-foreground" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16"><path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" /></svg>
                     <p className="mb-2 text-sm text-muted-foreground"><span className="font-semibold">Click to upload</span></p>
                   </div>
                   <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} />
@@ -617,21 +618,21 @@ function EditEquipmentModal({ product, onClose, onSuccess }: { product: any, onC
 
             <div className="space-y-2">
               <label className="text-sm font-medium">Title</label>
-              <input 
+              <input
                 required
-                type="text" 
+                type="text"
                 value={formData.title}
-                onChange={e => setFormData(prev => ({...prev, title: e.target.value}))}
+                onChange={e => setFormData(prev => ({ ...prev, title: e.target.value }))}
                 className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
                 placeholder="Equipment Title"
               />
             </div>
-            
+
             <div className="space-y-2">
               <label className="text-sm font-medium">Category</label>
-              <select 
+              <select
                 value={formData.category}
-                onChange={e => setFormData(prev => ({...prev, category: e.target.value}))}
+                onChange={e => setFormData(prev => ({ ...prev, category: e.target.value }))}
                 className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 {EQUIPMENT_CATEGORIES.map(cat => (
@@ -642,38 +643,38 @@ function EditEquipmentModal({ product, onClose, onSuccess }: { product: any, onC
 
             <div className="space-y-2">
               <label className="text-sm font-medium">Short Description</label>
-              <textarea 
+              <textarea
                 rows={2}
                 value={formData.short_description}
-                onChange={e => setFormData(prev => ({...prev, short_description: e.target.value}))}
+                onChange={e => setFormData(prev => ({ ...prev, short_description: e.target.value }))}
                 className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
                 placeholder="Brief description for the card"
               />
             </div>
-            
+
             <div className="space-y-2">
               <label className="text-sm font-medium">Full Description</label>
-              <textarea 
+              <textarea
                 rows={4}
                 value={formData.description}
-                onChange={e => setFormData(prev => ({...prev, description: e.target.value}))}
+                onChange={e => setFormData(prev => ({ ...prev, description: e.target.value }))}
                 className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
                 placeholder="Detailed specifications and information"
               />
             </div>
           </form>
         </div>
-        
+
         <div className="border-t border-border p-6 flex justify-end gap-3 bg-secondary/20 rounded-b-2xl">
-          <button 
-            type="button" 
+          <button
+            type="button"
             onClick={onClose}
             className="px-4 py-2 rounded-lg text-sm font-medium hover:bg-secondary transition-colors"
           >
             Cancel
           </button>
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             form="edit-equipment-form"
             disabled={isSubmitting}
             className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 flex items-center gap-2"
@@ -706,7 +707,7 @@ function AddEquipmentModal({ onClose, onSuccess }: { onClose: () => void, onSucc
     if (!file) return
     const fd = new FormData()
     fd.append('file', file)
-    
+
     try {
       const res = await fetch('/api/editor/upload', {
         method: 'POST',
@@ -727,7 +728,7 @@ function AddEquipmentModal({ onClose, onSuccess }: { onClose: () => void, onSucc
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!formData.title) return alert('Title is required')
-    
+
     setIsSubmitting(true)
     try {
       const res = await fetch('/api/editor/equipment/new', {
@@ -735,7 +736,7 @@ function AddEquipmentModal({ onClose, onSuccess }: { onClose: () => void, onSucc
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
       })
-      
+
       if (res.ok) {
         onSuccess()
       } else {
@@ -756,10 +757,10 @@ function AddEquipmentModal({ onClose, onSuccess }: { onClose: () => void, onSucc
         <div className="flex items-center justify-between border-b border-border p-6">
           <h2 className="font-heading text-xl font-bold">Add New Equipment</h2>
           <button onClick={onClose} className="rounded-lg p-2 hover:bg-secondary transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
           </button>
         </div>
-        
+
         <div className="flex-1 overflow-y-auto p-6">
           <form id="add-equipment-form" onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
@@ -768,18 +769,18 @@ function AddEquipmentModal({ onClose, onSuccess }: { onClose: () => void, onSucc
                 <div className="relative aspect-video rounded-xl overflow-hidden bg-secondary border border-border">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={formData.image_url} alt="Preview" className="w-full h-full object-cover" />
-                  <button 
-                    type="button" 
-                    onClick={() => setFormData(prev => ({...prev, image_url: ''}))}
+                  <button
+                    type="button"
+                    onClick={() => setFormData(prev => ({ ...prev, image_url: '' }))}
                     className="absolute top-2 right-2 bg-black/50 text-white p-1.5 rounded-lg hover:bg-black/70"
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
                   </button>
                 </div>
               ) : (
                 <label className="flex flex-col items-center justify-center w-full aspect-video border-2 border-dashed border-border rounded-xl cursor-pointer hover:bg-secondary/50 transition-colors">
                   <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                    <svg className="w-8 h-8 mb-4 text-muted-foreground" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16"><path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/></svg>
+                    <svg className="w-8 h-8 mb-4 text-muted-foreground" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16"><path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" /></svg>
                     <p className="mb-2 text-sm text-muted-foreground"><span className="font-semibold">Click to upload</span></p>
                   </div>
                   <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} />
@@ -789,21 +790,21 @@ function AddEquipmentModal({ onClose, onSuccess }: { onClose: () => void, onSucc
 
             <div className="space-y-2">
               <label className="text-sm font-medium">Title</label>
-              <input 
+              <input
                 required
-                type="text" 
+                type="text"
                 value={formData.title}
-                onChange={e => setFormData(prev => ({...prev, title: e.target.value}))}
+                onChange={e => setFormData(prev => ({ ...prev, title: e.target.value }))}
                 className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
                 placeholder="Equipment Title"
               />
             </div>
-            
+
             <div className="space-y-2">
               <label className="text-sm font-medium">Category</label>
-              <select 
+              <select
                 value={formData.category}
-                onChange={e => setFormData(prev => ({...prev, category: e.target.value}))}
+                onChange={e => setFormData(prev => ({ ...prev, category: e.target.value }))}
                 className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 {EQUIPMENT_CATEGORIES.map(cat => (
@@ -814,38 +815,38 @@ function AddEquipmentModal({ onClose, onSuccess }: { onClose: () => void, onSucc
 
             <div className="space-y-2">
               <label className="text-sm font-medium">Short Description</label>
-              <textarea 
+              <textarea
                 rows={2}
                 value={formData.short_description}
-                onChange={e => setFormData(prev => ({...prev, short_description: e.target.value}))}
+                onChange={e => setFormData(prev => ({ ...prev, short_description: e.target.value }))}
                 className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
                 placeholder="Brief description for the card"
               />
             </div>
-            
+
             <div className="space-y-2">
               <label className="text-sm font-medium">Full Description</label>
-              <textarea 
+              <textarea
                 rows={4}
                 value={formData.description}
-                onChange={e => setFormData(prev => ({...prev, description: e.target.value}))}
+                onChange={e => setFormData(prev => ({ ...prev, description: e.target.value }))}
                 className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
                 placeholder="Detailed specifications and information"
               />
             </div>
           </form>
         </div>
-        
+
         <div className="border-t border-border p-6 flex justify-end gap-3 bg-secondary/20 rounded-b-2xl">
-          <button 
-            type="button" 
+          <button
+            type="button"
             onClick={onClose}
             className="px-4 py-2 rounded-lg text-sm font-medium hover:bg-secondary transition-colors"
           >
             Cancel
           </button>
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             form="add-equipment-form"
             disabled={isSubmitting}
             className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 flex items-center gap-2"

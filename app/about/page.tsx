@@ -35,7 +35,7 @@ export default function AboutPage() {
 
               <ul className="space-y-4">
                 {[
-                  { key: "point1", default: 'Over 15 years of industry excellence' },
+                  { key: "point1", default: 'Over 6 years of industry excellence' },
                   { key: "point2", default: 'Partnered with 500+ top-tier hospitals' },
                   { key: "point3", default: '24/7 dedicated support and maintenance' },
                   { key: "point4", default: 'Certified quality assurance processes' }
@@ -66,11 +66,6 @@ export default function AboutPage() {
                   <Award className="h-8 w-8 mb-4 opacity-80" />
                   <h3 className="font-semibold text-lg mb-2"><EditableText section="about" fieldKey="feat3_title">Award Winning</EditableText></h3>
                   <p className="text-sm opacity-90"><EditableText section="about" fieldKey="feat3_desc">Recognized for excellence in medical supply chain.</EditableText></p>
-                </div>
-                <div className="rounded-2xl bg-secondary/50 p-6 shadow-sm border border-border/50">
-                  <div className="text-4xl font-bold text-primary mb-2"><EditableText section="about" fieldKey="feat4_value">10k+</EditableText></div>
-                  <h3 className="font-semibold text-lg mb-2"><EditableText section="about" fieldKey="feat4_title">Installations</EditableText></h3>
-                  <p className="text-sm text-muted-foreground"><EditableText section="about" fieldKey="feat4_desc">Successfully deployed across the globe.</EditableText></p>
                 </div>
               </div>
             </div>

@@ -61,14 +61,14 @@ export default function ContactPage() {
               <h3 className="mb-4 text-xl font-semibold text-foreground"><EditableText section="contact" fieldKey="intl_title">International Enquiry</EditableText></h3>
               <div className="space-y-3 text-muted-foreground leading-relaxed">
                 <p className="flex items-start gap-2"><MapPin className="h-4 w-4 mt-1 shrink-0" /> <EditableText section="contact" fieldKey="intl_address">4001, Blue tower Dubai</EditableText></p>
-                <p className="flex items-center gap-2"><Phone className="h-4 w-4 shrink-0" /> <EditableText section="contact" fieldKey="intl_phone">7010539681</EditableText></p>
+                <p className="flex items-center gap-2"><Phone className="h-4 w-4 shrink-0" /> <EditableText section="contact" fieldKey="intl_phone">+91 7010539681</EditableText></p>
                 <p className="flex items-center gap-2"><Mail className="h-4 w-4 shrink-0" /> <EditableText section="contact" fieldKey="intl_email2">danapriya@saferxmedical.com</EditableText></p>
               </div>
             </div>
           </div>
 
           {/* Bottom Section: Form + Map */}
-          <div className="grid gap-12 lg:grid-cols-2 lg:gap-16 items-start">
+          <div id="contact-form" className="grid gap-12 lg:grid-cols-2 lg:gap-16 items-start scroll-mt-32">
 
             {/* Contact Form */}
             <div className="rounded-3xl bg-card p-8 shadow-lg border border-border/50">

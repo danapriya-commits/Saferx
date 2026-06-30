@@ -1,8 +1,8 @@
-import { 
-  Activity, 
-  ScanLine, 
-  Microscope, 
-  Baby, 
+import {
+  Activity,
+  ScanLine,
+  Microscope,
+  Baby,
   Building2,
   HeartPulse,
   Syringe,
@@ -301,7 +301,7 @@ export const PRODUCTS: Product[] = [
   // Maternal & Neonatal Care Solutions
   {
     id: 'fetal-monitor',
-    name: 'Advanced Fetal Monitors (CTG)',
+    name: 'Advanced Infant Incubators (CTG)',
     category: 'Maternal & Neonatal',
     description: 'High-sensitivity monitors for antepartum and intrapartum tracing of fetal heart rate and maternal contractions.',
     image: '/images/cat-neonatal.png',

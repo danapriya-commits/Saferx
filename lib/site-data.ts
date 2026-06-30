@@ -62,35 +62,35 @@ export const SOLUTIONS = [
 
 export const EQUIPMENT_CATEGORIES = [
   {
-    title: 'Patient Monitoring',
+    title: 'Critical Care',
     slug: 'patient-monitoring',
     icon: MonitorSmartphone,
     image: '/images/cat-monitoring.png',
     desc: 'Multi-parameter monitors, central stations and telemetry systems for every care level.',
   },
   {
-    title: 'Imaging Systems',
+    title: 'Diagnostic imaging',
     slug: 'imaging-systems',
     icon: ScanLine,
     image: '/images/cat-imaging.png',
     desc: 'Advanced CT, MRI, digital X-ray and ultrasound platforms from leading manufacturers.',
   },
   {
-    title: 'Laboratory Equipment',
+    title: 'Laboratory',
     slug: 'laboratory-equipment',
     icon: FlaskConical,
     image: '/images/cat-lab.png',
     desc: 'Hematology, biochemistry and immunoassay analyzers with full automation options.',
   },
   {
-    title: 'Cardiology Equipment',
+    title: 'Maternal & Neonatal Care',
     slug: 'cardiology-equipment',
     icon: HeartPulse,
     image: '/images/cat-cardiology.png',
     desc: 'ECG systems, defibrillators, cath-lab and cardiac monitoring technology.',
   },
   {
-    title: 'Neonatal Equipment',
+    title: 'Operation Theatre',
     slug: 'neonatal-equipment',
     icon: Baby,
     image: '/images/cat-neonatal.png',
@@ -149,7 +149,7 @@ export const TESTIMONIALS = [
     quote:
       'I belong to ALERT NGO and use to get a first aid kit content for my customized kit for two years. You can trust and move on further if you want to do business with them. The staff and management people are very gentle and trustworthy. Also, their helpful nature helps to get more good suggestions and friendly approach with them.',
     name: 'Karthik',
-    // role: 'Procurement Head, Meridian Group',
+    role: 'ALERT NGO',
     rating: 5,
   },
   {
@@ -173,7 +173,7 @@ export const CERTIFICATIONS = [
 export const BLOG_POSTS = [
   {
     slug: 'future-of-hospital-monitoring',
-    title: 'The Future of Connected Patient Monitoring in Indian Hospitals',
+    title: 'The Future of Connected Critical Care in Indian Hospitals',
     excerpt:
       'How centralised monitoring and IoT-enabled devices are transforming critical care delivery and patient outcomes.',
     image: '/images/blog-1.png',

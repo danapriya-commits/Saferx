@@ -27,7 +27,7 @@ export default function RefundPolicyPage() {
           <h2>1. Order Cancellation</h2>
           <p><strong>Cancellation by the buyer:</strong></p>
           <ul>
-            <li>Within 48 hours of order confirmation and before equipment is sourced — full advance refund less any bank or transaction charges</li>
+            <li>Within 24 hours of order confirmation and before equipment is sourced — full advance refund less any bank or transaction charges</li>
             <li>After 48 hours but before dispatch — refund of advance less 20% restocking or procurement charge (or actual costs incurred, whichever is higher)</li>
             <li>After dispatch — cancellation is not accepted; standard return and refund terms apply</li>
           </ul>
@@ -94,7 +94,7 @@ export default function RefundPolicyPage() {
           <p>
             <strong>Saferx Medical Supplies Pvt. Ltd.</strong><br />
             D.No. 9/24, Irugur Main Road, Irugur, Coimbatore – 641103, Tamil Nadu, India<br />
-            Email: sales@saferxmedical.com | Phone: +91 90434 90435
+            Email: sales@saferxmedical.com | Phone:+91 7845555955
           </p>
         </div>
       </section>

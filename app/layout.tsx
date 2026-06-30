@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     'hospital infrastructure',
     'ICU equipment',
     'diagnostic imaging',
-    'patient monitoring',
+    'Critical Care',
     'healthcare technology',
   ],
 }

@@ -11,7 +11,7 @@ import { ProjectGalleryGrid } from '@/components/projects/project-gallery-grid'
 import { CategoriesGrid } from '@/components/projects/categories-grid'
 
 export const metadata = {
-  title: 'Healthcare Projects & Success Stories | Saferx',
+  title: 'Transforming Healthcare | Saferx',
   description: 'Showcasing our completed and ongoing healthcare projects, hospital infrastructure solutions, and medical equipment installations.',
 }
 
@@ -44,7 +44,7 @@ export default function ProjectsPage() {
     <div className="flex flex-col min-h-screen">
       {/* 1. Hero Section */}
       <PageHero
-        title={<EditableText section="projects" fieldKey="hero_title">Healthcare Projects & Success Stories</EditableText>}
+        title={<EditableText section="projects" fieldKey="hero_title">Transforming Healthcare</EditableText>}
         description={<EditableText section="projects" fieldKey="hero_description">Delivering reliable medical technology solutions for hospitals, diagnostic centres, ICUs, NICUs, imaging departments, and laboratories.</EditableText>}
         breadcrumb="Projects"
         eyebrow={<EditableText section="projects" fieldKey="hero_eyebrow">Our Work</EditableText>}
@@ -82,7 +82,7 @@ export default function ProjectsPage() {
               <EditableText section="projects" fieldKey="areas_desc">We provide end-to-end project execution across specialized healthcare departments.</EditableText>
             </p>
           </div>
-          
+
           <CategoriesGrid />
         </div>
       </section>
@@ -116,7 +116,7 @@ export default function ProjectsPage() {
               <EditableText section="projects" fieldKey="gallery_desc">A glimpse into our state-of-the-art installations and hospital setups.</EditableText>
             </p>
           </div>
-          
+
           <ProjectGalleryGrid images={GALLERY_IMAGES} />
         </div>
       </section>
@@ -132,14 +132,14 @@ export default function ProjectsPage() {
               <p className="text-lg text-primary-foreground/80 mb-8 leading-relaxed">
                 <EditableText section="projects" fieldKey="why_desc">We go beyond simply supplying equipment. We act as your strategic technology partner, ensuring every square foot of your clinical space is optimized for patient care and operational efficiency.</EditableText>
               </p>
-              <Link 
+              <Link
                 href="/contact"
                 className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-6 py-3.5 text-sm font-bold text-primary transition-all hover:bg-gray-100 shadow-lg"
               >
                 Discuss Your Project <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
-            
+
             <div className="grid gap-6 sm:grid-cols-2">
               {WHY_CHOOSE.map((item) => (
                 <div key={item.id} className="rounded-2xl bg-white/10 p-6 border border-white/20 backdrop-blur-sm">

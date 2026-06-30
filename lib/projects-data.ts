@@ -10,7 +10,7 @@ export interface ProjectData {
   image: string
   stat: string // For the homepage preview card
   shortDesc: string // For the homepage preview card
-  
+
   // Detailed Page Data
   requirements: string
   solutions: string
@@ -29,8 +29,8 @@ export const PROJECTS: ProjectData[] = [
     completionYear: '2025',
     image: '/images/project-hospital.png',
     stat: '120-bed multi-specialty facility',
-    shortDesc: 'Complete turnkey ICU, operation theatre and patient monitoring deployment delivered in 14 weeks.',
-    
+    shortDesc: 'Complete turnkey ICU, operation theatre and Critical Care deployment delivered in 14 weeks.',
+
     requirements: 'The hospital needed a rapid, state-of-the-art ICU expansion to handle increased critical care admissions. The key challenges included a tight 14-week timeline, integration with existing hospital information systems, and ensuring the highest standards of infection control and patient safety.',
     solutions: 'Saferx provided an end-to-end turnkey solution, managing everything from initial spatial planning to final commissioning. We deployed a dedicated biomedical engineering team on-site to coordinate with hospital architects, ensuring that gas pipelines, electrical layouts, and equipment footprints were perfectly aligned.',
     scope: [
@@ -64,7 +64,7 @@ export const PROJECTS: ProjectData[] = [
     image: '/images/project-diagnostic.png',
     stat: 'CT, MRI & full lab automation',
     shortDesc: 'End-to-end imaging and laboratory setup with installation, calibration and staff training.',
-    
+
     requirements: 'Meridian required a complete, ground-up setup of a high-throughput diagnostic center capable of handling over 500 patients daily. The facility needed advanced imaging modalities alongside a fully automated clinical laboratory, all operating under a unified LIS/PACS system.',
     solutions: 'We acted as the primary technology consultant, advising on the optimal mix of imaging and IVD equipment to maximize ROI. We handled the complex logistics of MRI and CT scanner delivery and installation, including RF shielding verification and regulatory compliance documentation.',
     scope: [
@@ -98,7 +98,7 @@ export const PROJECTS: ProjectData[] = [
     image: '/images/cat-imaging.png',
     stat: '+80 critical-care beds',
     shortDesc: 'Phased expansion adding NICU, cardiology and additional ICU capacity with zero downtime.',
-    
+
     requirements: 'Sunrise Hospital was undergoing a major expansion while remaining fully operational. They required 80 new critical care beds, including a specialized Level III NICU and a new Cath Lab, without disrupting ongoing patient care in adjacent wings.',
     solutions: 'Saferx developed a phased deployment strategy. We worked during off-peak hours and utilized modular installation techniques to minimize noise and disruption. We also standardized the monitoring equipment across the new and old wings to simplify staff cross-training.',
     scope: [
@@ -110,7 +110,7 @@ export const PROJECTS: ProjectData[] = [
     ],
     equipmentImplemented: [
       'Neonatal Incubators & Open Care Warmers',
-      'Fetal Monitors & CTG Machines',
+      'Infant Incubators & CTG Machines',
       'Flat Panel Cath Lab System',
       'Intra-Aortic Balloon Pump (IABP)',
       'Mobile C-Arm System'

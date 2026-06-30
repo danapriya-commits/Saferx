@@ -45,14 +45,14 @@ export function ProductModal({ product, allProducts = [], onClose, onSelectProdu
   return createPortal(
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 md:p-12">
       {/* Backdrop */}
-      <div 
+      <div
         className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       />
-      
+
       {/* Modal Container */}
       <div className="relative flex max-h-full w-full max-w-5xl flex-col overflow-hidden rounded-2xl bg-background shadow-2xl animate-in fade-in zoom-in-95 duration-200">
-        
+
         {/* Header / Close Button */}
         <div className="absolute right-4 top-4 z-10">
           <button
@@ -65,7 +65,7 @@ export function ProductModal({ product, allProducts = [], onClose, onSelectProdu
 
         {/* Content Area */}
         <div className="flex flex-1 min-h-0 flex-col overflow-y-auto md:flex-row">
-          
+
           {/* Left Side: Sticky Image & Quick CTA */}
           <div className="md:w-2/5 md:shrink-0 bg-secondary/20 p-6 md:p-8 flex flex-col">
             <div className="relative aspect-square w-full rounded-xl overflow-hidden bg-background shadow-sm border border-border/50 mb-6">
@@ -79,23 +79,24 @@ export function ProductModal({ product, allProducts = [], onClose, onSelectProdu
                 className="object-cover"
               />
             </div>
-            
+
             <div className="mt-auto space-y-4">
               <Link
-                href={`/contact?product=${product.id}`}
+                href={`/contact?product=${product.id}#contact-form`}
+                onClick={onClose}
                 className="flex w-full items-center justify-center rounded-xl bg-primary py-3.5 text-sm font-semibold text-primary-foreground transition-all hover:bg-primary/90 shadow-md hover:shadow-primary/20"
               >
                 Request Quote
               </Link>
               <p className="text-center text-xs text-muted-foreground">
-                Our team typically responds within 2 hours.
+                Our team will respond shortly
               </p>
             </div>
           </div>
 
           {/* Right Side: Scrollable Details */}
           <div className="flex-1 p-6 md:p-10 space-y-10">
-            
+
             {/* Title & Basics */}
             <div>
               <div className="mb-3 flex items-center gap-3">
@@ -158,13 +159,13 @@ export function ProductModal({ product, allProducts = [], onClose, onSelectProdu
 
             {/* Related Products */}
             {relatedProducts.length > 0 && (
-              <div className="pt-6 border-t border-border">
+              <div className="pt-6 pb-6 border-t border-border">
                 <h3 className="font-heading text-xl font-semibold mb-6 text-foreground">
                   Related Products
                 </h3>
                 <div className="grid gap-4 sm:grid-cols-2">
                   {relatedProducts.map((related) => (
-                    <div 
+                    <div
                       key={related.id}
                       onClick={() => onSelectProduct(related)}
                       className="group flex cursor-pointer items-center gap-4 rounded-xl border border-border bg-card p-3 transition-all hover:border-primary/50 hover:shadow-md"
@@ -181,7 +182,10 @@ export function ProductModal({ product, allProducts = [], onClose, onSelectProdu
                 </div>
               </div>
             )}
-            
+
+            {/* Extra spacer for bottom gap */}
+            <div className="h-4 md:h-6 shrink-0 w-full"></div>
+
           </div>
         </div>
       </div>
