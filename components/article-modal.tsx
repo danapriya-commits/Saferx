@@ -17,10 +17,20 @@ function renderContent(content?: string) {
   
   return paragraphs.map((block, i) => {
     if (block.startsWith('### ')) {
+      const lines = block.split('\n')
+      const heading = lines[0].replace('### ', '')
+      const bodyLines = lines.slice(1).filter(l => l.trim().length > 0)
       return (
-        <h3 key={i} className="font-heading text-2xl font-bold text-foreground mt-8 mb-4">
-          {block.replace('### ', '')}
-        </h3>
+        <div key={i}>
+          <h3 className="font-heading text-xl font-bold text-foreground mt-8 mb-3">
+            {heading}
+          </h3>
+          {bodyLines.length > 0 && (
+            <p className="text-base leading-relaxed text-foreground/80 mb-6">
+              {bodyLines.join(' ')}
+            </p>
+          )}
+        </div>
       )
     }
     
@@ -64,17 +74,24 @@ function renderContent(content?: string) {
       )
     }
 
-    let parsedBlock: React.ReactNode = block
-    if (block.includes('**')) {
-      const parts = block.split('**')
-      parsedBlock = parts.map((part, k) => 
-        k % 2 === 1 ? <strong key={k} className="font-bold text-foreground">{part}</strong> : part
-      )
-    }
+    const processText = (text: string) => {
+      return text.split('\n').map((line, lineIdx, linesArr) => {
+        const lineContent = line.includes('**') 
+          ? line.split('**').map((part, k) => k % 2 === 1 ? <strong key={k} className="font-semibold text-foreground">{part}</strong> : part)
+          : line;
+        
+        return (
+          <span key={lineIdx}>
+            {lineContent}
+            {lineIdx < linesArr.length - 1 && <br />}
+          </span>
+        );
+      });
+    };
 
     return (
       <p key={i} className="text-base leading-relaxed text-foreground/80 mb-6">
-        {parsedBlock}
+        {processText(block)}
       </p>
     )
   })
