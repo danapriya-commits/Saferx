@@ -94,6 +94,45 @@ function EquipmentPageContent() {
     })
   }, [activeCategory, searchQuery, equipmentList, content, isEditing])
 
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
+
+  const handleEquipmentSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+    setSubmitStatus('idle')
+
+    const formData = new FormData(e.currentTarget)
+    const data = {
+      name: formData.get('name'),
+      hospital: formData.get('hospital'),
+      phone: formData.get('phone'),
+      email: formData.get('email'),
+      equipment: formData.get('equipment'),
+      message: formData.get('message'),
+    }
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      })
+
+      if (res.ok) {
+        setSubmitStatus('success')
+        e.currentTarget.reset()
+      } else {
+        setSubmitStatus('error')
+      }
+    } catch (error) {
+      console.error(error)
+      setSubmitStatus('error')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
   return (
     <div className="flex flex-col min-h-screen">
       <PageHero
@@ -249,46 +288,30 @@ function EquipmentPageContent() {
                       onClick={() => setIsAddModalOpen(true)}
                       className="group flex flex-col items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-border bg-secondary/10 hover:bg-secondary/30 transition-all duration-300 hover:-translate-y-1 min-h-[350px] cursor-pointer"
                     >
-                      <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors mb-4">
-                        <Plus className="h-8 w-8" />
+                      <div className="flex h-16 w-16 items-center justify-center rounded-full bg-background shadow-sm mb-4 group-hover:scale-110 transition-transform duration-300 border border-border">
+                        <Plus className="h-8 w-8 text-primary" />
                       </div>
-                      <span className="font-heading text-lg font-semibold text-foreground">Add New Equipment</span>
+                      <span className="font-semibold text-lg text-foreground">Add New Equipment</span>
+                      <span className="text-sm text-muted-foreground mt-2">Click to create</span>
                     </button>
                   )}
                 </div>
               ) : (
-                <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border py-20 text-center bg-card shadow-sm">
-                  {isEditing ? (
-                    <>
-                      <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary mb-4">
-                        <Plus className="h-8 w-8" />
-                      </div>
-                      <h3 className="text-lg font-semibold text-foreground">Ready to add equipment?</h3>
-                      <p className="text-muted-foreground mt-2 max-w-sm mb-6">
-                        Click the button below to add your first piece of equipment to this category.
-                      </p>
-                      <button
-                        onClick={() => setIsAddModalOpen(true)}
-                        className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary/90 transition-colors"
-                      >
-                        <Plus className="h-4 w-4" /> Add New Equipment
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      <Search className="h-10 w-10 text-muted-foreground mb-4" />
-                      <h3 className="text-lg font-semibold text-foreground">No equipment found</h3>
-                      <p className="text-muted-foreground mt-2 max-w-sm">
-                        We couldn't find any equipment matching your search criteria. Try adjusting your filters or search terms.
-                      </p>
-                      <button
-                        onClick={() => { setSearchQuery(''); setActiveCategory('All'); }}
-                        className="mt-6 font-medium text-primary hover:underline"
-                      >
-                        Clear all filters
-                      </button>
-                    </>
-                  )}
+                <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-card p-12 text-center h-[400px]">
+                  <Search className="mb-4 h-12 w-12 text-muted-foreground/50" />
+                  <h3 className="mb-2 text-xl font-bold text-foreground">No equipment found</h3>
+                  <p className="text-muted-foreground max-w-sm mb-6">
+                    We couldn't find any equipment matching your search criteria. Try adjusting your filters or search terms.
+                  </p>
+                  <button
+                    onClick={() => {
+                      setActiveCategory('All')
+                      setSearchQuery('')
+                    }}
+                    className="text-primary font-medium hover:underline"
+                  >
+                    Clear all filters
+                  </button>
                 </div>
               )}
             </div>
@@ -296,57 +319,17 @@ function EquipmentPageContent() {
         </div>
       </section>
 
-      {/* Why Choose Saferx Section */}
-      <section className="border-t border-border bg-card py-16">
-        <div className="mx-auto max-w-[1536px] container-px">
-          <div className="mb-12 text-center">
-            <h2 className="font-heading text-3xl font-bold text-foreground"><EditableText section="equipment" fieldKey="why_title">Why Choose Saferx?</EditableText></h2>
-            <p className="mt-4 text-muted-foreground max-w-2xl mx-auto">
-              <EditableText section="equipment" fieldKey="why_desc">We partner with global manufacturers to deliver enterprise-grade medical technologies backed by exceptional service.</EditableText>
-            </p>
+      {/* Global Partnership Section */}
+      <section className="py-20 bg-background border-t border-border/50">
+        <div className="mx-auto max-w-4xl container-px text-center">
+          <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 mb-6 shadow-inner">
+            <ShieldCheck className="h-8 w-8 text-primary" />
           </div>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="rounded-2xl border border-border bg-secondary/20 p-6 text-center transition-all hover:bg-secondary/40">
-              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary">
-                <ShieldCheck className="h-7 w-7" />
-              </div>
-              <h4 className="font-semibold text-foreground mb-2"><EditableText section="equipment" fieldKey="why1_title">Quality Assured Equipment</EditableText></h4>
-              <p className="text-sm text-muted-foreground"><EditableText section="equipment" fieldKey="why1_desc">Certified products meeting stringent international standards.</EditableText></p>
-            </div>
-            <div className="rounded-2xl border border-border bg-secondary/20 p-6 text-center transition-all hover:bg-secondary/40">
-              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-accent/20 text-accent-foreground">
-                <Settings2 className="h-7 w-7" />
-              </div>
-              <h4 className="font-semibold text-foreground mb-2"><EditableText section="equipment" fieldKey="why2_title">Installation & Commissioning</EditableText></h4>
-              <p className="text-sm text-muted-foreground"><EditableText section="equipment" fieldKey="why2_desc">Expert on-site setup and clinical application training.</EditableText></p>
-            </div>
-            <div className="rounded-2xl border border-border bg-secondary/20 p-6 text-center transition-all hover:bg-secondary/40">
-              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary">
-                <Activity className="h-7 w-7" />
-              </div>
-              <h4 className="font-semibold text-foreground mb-2"><EditableText section="equipment" fieldKey="why3_title">Preventive Maintenance</EditableText></h4>
-              <p className="text-sm text-muted-foreground"><EditableText section="equipment" fieldKey="why3_desc">Comprehensive AMC plans to ensure maximum uptime.</EditableText></p>
-            </div>
-            <div className="rounded-2xl border border-border bg-secondary/20 p-6 text-center transition-all hover:bg-secondary/40">
-              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-accent/20 text-accent-foreground">
-                <Wrench className="h-7 w-7" />
-              </div>
-              <h4 className="font-semibold text-foreground mb-2"><EditableText section="equipment" fieldKey="why4_title">Expert Technical Assistance</EditableText></h4>
-              <p className="text-sm text-muted-foreground"><EditableText section="equipment" fieldKey="why4_desc">24/7 dedicated biomedical support and rapid repair services.</EditableText></p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Equipment Consultation CTA */}
-      <section className="bg-primary py-16 text-primary-foreground relative overflow-hidden">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]"></div>
-        <div className="mx-auto max-w-[1536px] container-px text-center relative z-10">
-          <h2 className="font-heading text-3xl font-bold md:text-4xl">
-            <EditableText section="equipment" fieldKey="cta_title">Need Help Selecting the Right Medical Equipment?</EditableText>
+          <h2 className="font-heading text-3xl sm:text-4xl font-bold text-foreground mb-6">
+            Global Procurement Partnerships
           </h2>
-          <p className="mt-4 text-lg text-primary-foreground/80 max-w-3xl mx-auto">
-            <EditableText section="equipment" fieldKey="cta_desc">Our specialists help hospitals and healthcare facilities choose the most suitable solutions based on clinical requirements, workflow needs, and budget.</EditableText>
+          <p className="text-lg leading-relaxed text-muted-foreground mb-10">
+            We partner with leading medical device manufacturers across Europe, USA, Japan, and South Korea to bring state-of-the-art technology to your facility at competitive price points. All equipment comes with comprehensive warranty, local service support, and certified calibration.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
@@ -355,18 +338,12 @@ function EquipmentPageContent() {
             >
               Request Consultation
             </Link>
-            <Link
-              href="#inquiry"
-              className="inline-flex h-12 items-center justify-center rounded-full border border-primary-foreground/20 bg-primary-foreground/10 px-8 font-semibold text-primary-foreground backdrop-blur-sm transition-all hover:bg-primary-foreground/20"
-            >
-              Get Quote
-            </Link>
           </div>
         </div>
       </section>
 
       {/* Inquiry Form Section */}
-      <section id="inquiry" className="py-20 bg-card scroll-mt-20">
+      <section id="inquiry" className="py-20 bg-secondary/10 scroll-mt-20">
         <div className="mx-auto max-w-3xl container-px">
           <div className="text-center mb-10">
             <h2 className="font-heading text-3xl font-bold text-foreground">Equipment Inquiry</h2>
@@ -374,52 +351,88 @@ function EquipmentPageContent() {
           </div>
 
           <div className="rounded-2xl border border-border bg-background p-6 md:p-10 shadow-lg">
-            <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
-              <div className="grid gap-6 md:grid-cols-2">
-                <div className="space-y-2">
-                  <label htmlFor="name" className="text-sm font-medium text-foreground">Full Name</label>
-                  <input type="text" id="name" className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" placeholder="Dr. John Doe" />
+            {submitStatus === 'success' ? (
+              <div className="flex flex-col items-center justify-center py-8 text-center animate-in zoom-in duration-300">
+                <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-4">
+                  <ShieldCheck className="w-8 h-8" />
                 </div>
-                <div className="space-y-2">
-                  <label htmlFor="hospital" className="text-sm font-medium text-foreground">Hospital / Organization</label>
-                  <input type="text" id="hospital" className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" placeholder="City General Hospital" />
+                <h3 className="text-2xl font-bold text-foreground mb-2">Inquiry Sent Successfully!</h3>
+                <p className="text-muted-foreground max-w-md">
+                  Thank you for reaching out. Our medical equipment specialist will get back to you within 24 hours.
+                </p>
+                <button 
+                  onClick={() => setSubmitStatus('idle')}
+                  className="mt-6 text-primary font-semibold hover:underline"
+                >
+                  Send another inquiry
+                </button>
+              </div>
+            ) : (
+              <form className="space-y-6" onSubmit={handleEquipmentSubmit}>
+                <div className="grid gap-6 md:grid-cols-2">
+                  <div className="space-y-2">
+                    <label htmlFor="name" className="text-sm font-medium text-foreground">Full Name</label>
+                    <input type="text" id="name" name="name" required className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" placeholder="Dr. John Doe" />
+                  </div>
+                  <div className="space-y-2">
+                    <label htmlFor="hospital" className="text-sm font-medium text-foreground">Hospital / Organization</label>
+                    <input type="text" id="hospital" name="hospital" className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" placeholder="City General Hospital" />
+                  </div>
                 </div>
-              </div>
 
-              <div className="grid gap-6 md:grid-cols-2">
-                <div className="space-y-2">
-                  <label htmlFor="phone" className="text-sm font-medium text-foreground">Phone Number</label>
-                  <input type="tel" id="phone" className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" placeholder="+91 90000 00000" />
+                <div className="grid gap-6 md:grid-cols-2">
+                  <div className="space-y-2">
+                    <label htmlFor="phone" className="text-sm font-medium text-foreground">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" required className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" placeholder="+91 90000 00000" />
+                  </div>
+                  <div className="space-y-2">
+                    <label htmlFor="email" className="text-sm font-medium text-foreground">Email Address</label>
+                    <input type="email" id="email" name="email" required className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" placeholder="john@hospital.com" />
+                  </div>
                 </div>
+
                 <div className="space-y-2">
-                  <label htmlFor="email" className="text-sm font-medium text-foreground">Email Address</label>
-                  <input type="email" id="email" className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" placeholder="john@hospital.com" />
+                  <label htmlFor="equipment" className="text-sm font-medium text-foreground">Equipment Required</label>
+                  <select id="equipment" name="equipment" required defaultValue="" className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                    <option value="" disabled>Select equipment category...</option>
+                    <option value="monitoring">Monitoring Systems</option>
+                    <option value="critical-care">Critical Care</option>
+                    <option value="imaging">Diagnostic Imaging</option>
+                    <option value="lab">Laboratory</option>
+                    <option value="neonatal">Maternal & Neonatal Care</option>
+                    <option value="ot">Operation Theatre</option>
+                    <option value="multiple">Multiple / Complete Setup</option>
+                  </select>
                 </div>
-              </div>
 
-              <div className="space-y-2">
-                <label htmlFor="equipment" className="text-sm font-medium text-foreground">Equipment Required</label>
-                <select id="equipment" defaultValue="" className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-                  <option value="" disabled>Select equipment category...</option>
-                  <option value="monitoring">Monitoring Systems</option>
-                  <option value="critical-care">Critical Care</option>
-                  <option value="imaging">Diagnostic Imaging</option>
-                  <option value="lab">Laboratory</option>
-                  <option value="neonatal">Maternal & Neonatal Care</option>
-                  <option value="ot">Operation Theatre</option>
-                  <option value="multiple">Multiple / Complete Setup</option>
-                </select>
-              </div>
+                <div className="space-y-2">
+                  <label htmlFor="message" className="text-sm font-medium text-foreground">Message / Specifications</label>
+                  <textarea id="message" name="message" rows={4} className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" placeholder="Please describe your specific requirements, timeline, and any technical specifications needed..." />
+                </div>
 
-              <div className="space-y-2">
-                <label htmlFor="message" className="text-sm font-medium text-foreground">Message / Specifications</label>
-                <textarea id="message" rows={4} className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" placeholder="Please describe your specific requirements, timeline, and any technical specifications needed..." />
-              </div>
+                {submitStatus === 'error' && (
+                  <div className="p-4 bg-red-50 text-red-600 rounded-lg text-sm border border-red-100 flex items-start gap-3">
+                    <AlertTriangle className="w-5 h-5 shrink-0" />
+                    <p>There was an error sending your inquiry. Please try again later or contact us directly.</p>
+                  </div>
+                )}
 
-              <button type="button" className="w-full rounded-xl bg-primary py-3.5 text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary/90 transition-colors">
-                Send Inquiry
-              </button>
-            </form>
+                <button 
+                  type="submit" 
+                  disabled={isSubmitting}
+                  className="w-full flex items-center justify-center gap-2 rounded-xl bg-primary py-3.5 text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary/90 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <div className="h-4 w-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                      Sending...
+                    </>
+                  ) : (
+                    'Send Inquiry'
+                  )}
+                </button>
+              </form>
+            )}
           </div>
         </div>
       </section>
