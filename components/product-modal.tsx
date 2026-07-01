@@ -103,9 +103,6 @@ export function ProductModal({ product, allProducts = [], onClose, onSelectProdu
                 <span className="inline-flex rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
                   {product.category}
                 </span>
-                <span className="text-sm font-medium text-muted-foreground">
-                  {product.department}
-                </span>
               </div>
               <h2 className="font-heading text-3xl font-bold text-foreground mb-4">
                 {product.name}
