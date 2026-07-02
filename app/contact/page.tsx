@@ -34,9 +34,9 @@ export default function ContactPage() {
               </div>
               <h3 className="mb-4 text-xl font-semibold text-foreground"><EditableText section="contact" fieldKey="domestic_title">Domestic Enquiry</EditableText></h3>
               <div className="space-y-3 text-muted-foreground">
-                <p className="flex items-center gap-2"><Phone className="h-4 w-4" /> <EditableText section="contact" fieldKey="domestic_phone">+91  7845555955</EditableText></p>
-                <p className="flex items-center gap-2"><Mail className="h-4 w-4" /> <EditableText section="contact" fieldKey="domestic_email1">sales@saferxmedical.com</EditableText></p>
-                <p className="flex items-center gap-2"><Mail className="h-4 w-4" /> <EditableText section="contact" fieldKey="domestic_email2">danapriya@gmail.com</EditableText></p>
+                <a href="tel:+917845555955" className="flex items-center gap-2 hover:text-primary transition-colors"><Phone className="h-4 w-4" /> <EditableText section="contact" fieldKey="domestic_phone">+91  7845555955</EditableText></a>
+                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=sales@saferxmedical.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-primary transition-colors"><Mail className="h-4 w-4" /> <EditableText section="contact" fieldKey="domestic_email1">sales@saferxmedical.com</EditableText></a>
+                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=danapriya@gmail.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-primary transition-colors"><Mail className="h-4 w-4" /> <EditableText section="contact" fieldKey="domestic_email2">danapriya@gmail.com</EditableText></a>
               </div>
             </div>
 
@@ -61,8 +61,8 @@ export default function ContactPage() {
               <h3 className="mb-4 text-xl font-semibold text-foreground"><EditableText section="contact" fieldKey="intl_title">International Enquiry</EditableText></h3>
               <div className="space-y-3 text-muted-foreground leading-relaxed">
                 <p className="flex items-start gap-2"><MapPin className="h-4 w-4 mt-1 shrink-0" /> <EditableText section="contact" fieldKey="intl_address">4001, Blue tower Dubai</EditableText></p>
-                <p className="flex items-center gap-2"><Phone className="h-4 w-4 shrink-0" /> <EditableText section="contact" fieldKey="intl_phone">+91 7010539681</EditableText></p>
-                <p className="flex items-center gap-2"><Mail className="h-4 w-4 shrink-0" /> <EditableText section="contact" fieldKey="intl_email2">danapriya@saferxmedical.com</EditableText></p>
+                <a href="tel:+917010539681" className="flex items-center gap-2 hover:text-primary transition-colors"><Phone className="h-4 w-4 shrink-0" /> <EditableText section="contact" fieldKey="intl_phone">+91 7010539681</EditableText></a>
+                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=danapriya@saferxmedical.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-primary transition-colors"><Mail className="h-4 w-4 shrink-0" /> <EditableText section="contact" fieldKey="intl_email2">danapriya@saferxmedical.com</EditableText></a>
               </div>
             </div>
           </div>

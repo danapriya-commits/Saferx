@@ -130,15 +130,15 @@ export function SiteFooter() {
             <div className="space-y-6 text-[15px] text-gray-300">
               <div className="space-y-1.5">
                 <p>For Domestic Enquiry</p>
-                <p>+91 7845555955</p>
-                <a href="mailto:sales@saferxmedical.com" className="block hover:text-white transition-colors">sales@saferxmedical.com</a>
-                <a href="mailto:danapriya@gmail.com" className="block hover:text-white transition-colors">danapriya@gmail.com</a>
+                <a href="tel:+917845555955" className="block hover:text-white transition-colors">+91 7845555955</a>
+                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=sales@saferxmedical.com" target="_blank" rel="noopener noreferrer" className="block hover:text-white transition-colors">sales@saferxmedical.com</a>
+                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=danapriya@gmail.com" target="_blank" rel="noopener noreferrer" className="block hover:text-white transition-colors">danapriya@gmail.com</a>
               </div>
 
               <div className="space-y-1.5">
                 <p>International Enquiry</p>
-                <p>+91 7010539681</p>
-                <a href="mailto:danapriya@saferxmedical.com" className="block hover:text-white transition-colors">danapriya@saferxmedical.com</a>
+                <a href="tel:+917010539681" className="block hover:text-white transition-colors">+91 7010539681</a>
+                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=danapriya@saferxmedical.com" target="_blank" rel="noopener noreferrer" className="block hover:text-white transition-colors">danapriya@saferxmedical.com</a>
               </div>
             </div>
           </div>
